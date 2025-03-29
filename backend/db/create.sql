@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE TABLE IF NOT EXISTS summary (
     username TEXT,
     summary TEXT,
-    FOREIGN KEY username REFERNCES user(username)
+    FOREIGN KEY (username) REFERENCES user(username)
 );

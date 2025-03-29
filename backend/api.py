@@ -10,6 +10,7 @@ from typing import List, Dict, Any, Optional
 from twilio.rest import Client
 import configparser
 import smtplib
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -48,6 +49,19 @@ def emergency():
             print(reportDict["summary"])
             send_text(u["phone_number"], reportDict["summary"])
 
+@app.get("/summary/{username}")
+def get_summary(username: str):
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM summary WHERE username=?", [username])
+
+    _, summary = cur.fetchone()
+
+    r = {
+        "summary": summary
+    }
+
+    return JSONResponse(json.dumps(r))
 
 # FUNCTIONS --------------------
 

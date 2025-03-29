@@ -35,7 +35,7 @@ def send_text(text_str: str):
 def create_account(a: Account):
     ...
 
-@app.get("/report")
+@app.get("/start_flow")
 def emergency(location:str, user_info: str):
     generate_report(location, user_info)
 

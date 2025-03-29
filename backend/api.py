@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from pydantic import BaseModel
 import sqlite3
 import requests
@@ -11,6 +11,7 @@ from twilio.rest import Client
 import configparser
 import smtplib
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -20,6 +21,14 @@ class Account(BaseModel):
     phone_number: int
     location: str
     bio: str
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 @app.on_event("startup")
 def root():
@@ -60,7 +69,6 @@ def get_summary(username: str):
     r = {
         "summary": summary
     }
-
     return JSONResponse(json.dumps(r))
 
 # FUNCTIONS --------------------

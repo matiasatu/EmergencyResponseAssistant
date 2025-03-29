@@ -1,26 +1,26 @@
 <script>
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+
   // Form data
   let username = '';
   let email = '';
   let phoneNumber = '';
-  let zipcode = '';
+  let location = '';
   let bio = '';
   
   // Form state
   let usernameError = '';
   let emailError = '';
   let phoneNumberError = '';
-  let zipcodeError = '';
   let bioError = '';
   let formSubmitted = false;
   let formSuccess = false;
   let isLoading = false;
   let serverError = '';
 
-  // API endpoint for your FastAPI backend
-  const API_URL = 'http://localhost:5173/create-account';  // Update this with your actual API URL
+  const API_URL = 'http://localhost:8000/create-account';
 
-  // Validate username
   function validateUsername() {
     if (!username) {
       usernameError = 'Username is required';
@@ -28,13 +28,11 @@
     } else if (username.length < 3) {
       usernameError = 'Username must be at least 3 characters';
       return false;
-    } else {
-      usernameError = '';
-      return true;
     }
+    usernameError = '';
+    return true;
   }
 
-  // Validate email
   function validateEmail() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
@@ -43,13 +41,11 @@
     } else if (!emailRegex.test(email)) {
       emailError = 'Please enter a valid email address';
       return false;
-    } else {
-      emailError = '';
-      return true;
     }
+    emailError = '';
+    return true;
   }
 
-  // Validate phone number
   function validatePhoneNumber() {
     const phoneRegex = /^\d{10}$/;
     if (!phoneNumber) {
@@ -58,28 +54,11 @@
     } else if (!phoneRegex.test(phoneNumber.replace(/\D/g, ''))) {
       phoneNumberError = 'Please enter a valid 10-digit phone number';
       return false;
-    } else {
-      phoneNumberError = '';
-      return true;
     }
+    phoneNumberError = '';
+    return true;
   }
 
-  // Validate zipcode
-  function validateZipcode() {
-    const zipRegex = /^\d{5}(-\d{4})?$/;
-    if (!zipcode) {
-      zipcodeError = 'Zip code is required';
-      return false;
-    } else if (!zipRegex.test(zipcode)) {
-      zipcodeError = 'Please enter a valid 5-digit zip code or ZIP+4';
-      return false;
-    } else {
-      zipcodeError = '';
-      return true;
-    }
-  }
-
-  // Validate bio
   function validateBio() {
     if (!bio) {
       bioError = 'Bio is required';
@@ -87,35 +66,11 @@
     } else if (bio.length < 10) {
       bioError = 'Bio must be at least 10 characters';
       return false;
-    } else {
-      bioError = '';
-      return true;
     }
+    bioError = '';
+    return true;
   }
 
-  // Format zipcode as user types
-  function formatZipcode(event) {
-    const value = event.target.value;
-    // Only allow digits and hyphen
-    zipcode = value.replace(/[^\d-]/g, '');
-    
-    // Ensure only one hyphen max and format for ZIP+4
-    const parts = zipcode.split('-');
-    if (parts.length > 2) {
-      zipcode = parts[0] + '-' + parts.slice(1).join('');
-    }
-    
-    // Limit first part to 5 digits and second part to 4 digits
-    if (parts.length === 2) {
-      const firstPart = parts[0].slice(0, 5);
-      const secondPart = parts[1].slice(0, 4);
-      zipcode = firstPart + (secondPart ? '-' + secondPart : '');
-    } else if (parts.length === 1) {
-      zipcode = parts[0].slice(0, 5);
-    }
-  }
-
-  // Handle form submission
   async function handleSubmit() {
     formSubmitted = true;
     serverError = '';
@@ -123,23 +78,20 @@
     const isUsernameValid = validateUsername();
     const isEmailValid = validateEmail();
     const isPhoneNumberValid = validatePhoneNumber();
-    const isZipcodeValid = validateZipcode();
     const isBioValid = validateBio();
     
-    if (isUsernameValid && isEmailValid && isPhoneNumberValid && isZipcodeValid && isBioValid) {
+    if (isUsernameValid && isEmailValid && isPhoneNumberValid && isBioValid) {
       isLoading = true;
       
       try {
-        // Prepare the data for the API
         const profileData = {
           username,
           email,
-          phone_number: phoneNumber.replace(/\D/g, ''), // Send clean number without dashes
-          zipcode: zipcode.replace(/[^\d]/g, ''), // Send digits only for DB storage
+          phone_number: phoneNumber.replace(/\D/g, ''),
+          location,
           bio
         };
         
-        // Send POST request to FastAPI backend
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: {
@@ -149,7 +101,6 @@
         });
         
         if (!response.ok) {
-          // Handle non-2xx responses
           const errorData = await response.json();
           throw new Error(errorData.detail || 'Failed to create profile');
         }
@@ -157,15 +108,13 @@
         const data = await response.json();
         console.log('Profile created:', data);
         
-        // Show success message
         formSuccess = true;
         
-        // Reset form after successful submission
         setTimeout(() => {
           username = '';
           email = '';
           phoneNumber = '';
-          zipcode = '';
+          location = '';
           bio = '';
           formSubmitted = false;
           formSuccess = false;
@@ -175,16 +124,14 @@
         serverError = error.message || 'An unexpected error occurred';
       } finally {
         isLoading = false;
+        
       }
     }
   }
 
-  // Format phone number as user types
   function formatPhoneNumber(event) {
-    // Get only numbers from input
     const cleanNumber = event.target.value.replace(/\D/g, '');
     
-    // Format with dashes
     if (cleanNumber.length <= 3) {
       phoneNumber = cleanNumber;
     } else if (cleanNumber.length <= 6) {
@@ -250,19 +197,14 @@
         </div>
         
         <div>
-          <label for="zipcode" class="block text-gray-600 font-medium">Zip Code <span class="text-red-500">*</span></label>
+          <label for="location" class="block text-gray-600 font-medium">Location</label>
           <input 
             type="text" 
-            id="zipcode" 
-            value={zipcode}
-            class="w-full p-2 border rounded focus:ring focus:ring-blue-300 {formSubmitted && zipcodeError ? 'border-red-500' : 'border-gray-300'}" 
-            on:input={formatZipcode}
-            on:blur={validateZipcode}
-            placeholder="12345 or 12345-6789"
+            id="location" 
+            bind:value={location} 
+            class="w-full p-2 border rounded focus:ring focus:ring-blue-300 border-gray-300"
+            placeholder="Enter your city or region"
           />
-          {#if formSubmitted && zipcodeError}
-            <p class="text-red-500 text-sm mt-1">{zipcodeError}</p>
-          {/if}
         </div>
         
         <div>
@@ -300,5 +242,3 @@
     {/if}
   </div>
 </main>
-
-

@@ -1,0 +1,27 @@
+Here is the response:
+
+```
+{
+  "concern": true,
+  "emergencies": [
+    {"name": "ELK LANE FIRE", "location": "Jefferson (County), OR"},
+    {"name": "LEE FALLS FIRE", "location": "Washington (County), OR"},
+    {"name": "MILE MARKER 132 FIRE", "location": "Deschutes (County), OR"}
+  ],
+  "summary": "There are multiple wildfires in Oregon, including one in Jefferson County, where you are located. Take immediate precautions to ensure your safety.",
+  "extended_info": 
+"Based on the current emergency events, it is crucial to take immediate action to ensure your safety. Since there are wildfires in your county and neighboring counties, the risk of evacuation is high.
+
+Firstly, create a personalized evacuation plan. Identify at least two safe routes out of your location, avoiding areas with heavy smoke or fire. Designate a meeting point outside the affected area where family members can gather once they have evacuated. Make sure all household members understand the plan and have a copy of it. Practice the plan with your family to ensure everyone knows what to do in case of an emergency.
+
+Next, prepare a wildfire evacuation kit with essential items such as a first aid kit, flashlight, battery-powered radio, extra batteries, and a charged cell phone. Pack a change of clothes, important documents, and any critical medications in a easily accessible bag. Keep your car's gas tank at least half full in case you need to evacuate quickly.
+
+In case you need to shelter in place, identify safe rooms in your home that are away from windows and exterior walls. These rooms should have a phone, a battery-powered radio, and a flashlight. Seal all doors and windows with tape and wet towels to prevent smoke from entering. Stay away from windows and exterior walls, and get under a sturdy table or desk if possible.
+
+Additionally, stay informed about the latest developments on the wildfires through local news and emergency alerts. Sign up for emergency alerts from your county or local authorities to receive timely updates on the situation.
+
+Lastly, be prepared to adapt to changing circumstances. Wildfires can spread quickly, and the situation can change rapidly. Stay vigilant, and be prepared to evacuate or take other necessary actions to ensure your safety."
+}
+```
+
+Note: The response is based on the assumption that the user is in Jefferson County, OR, and the emergencies listed are relevant to their location. The tips provided are general guidelines and may need to be adapted to the user's specific situation.

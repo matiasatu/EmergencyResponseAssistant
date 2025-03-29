@@ -41,9 +41,10 @@ def emergency():
     users = get_users()
     for u in users:
         report = generate_report(u["location"], u["bio"])
-        print(report)
+        report = report.replace('\n', '')
         # reportDict = json.loads(report)
-        # print(report)
+        with open(f"{u["username"]}.json", "w") as f:
+            f.write(report)
 
 
 # FUNCTIONS --------------------
@@ -207,16 +208,19 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     {formatted_emergencies}
     
     MY LOCATION: {my_location}
-    
-    Format your response first with a boolean if there are any emergencies to be concerned about. Be extremely strict about this response. Do not add anything outside of the JSON. If it is false, only respond with false. If it is true,
-    respond with a json of an array of the names of the emergencies to be concerned about, as well as their location. After the array, wite another json entry titled summary. Summary should be a very long section
-    that using what you know about the user, write them specific things they need to know to be safe in this situation. Use the following user info to aid specifically for them, accounting for medical conditions, special circumstances, or anything else:
-    
+
     USER INFO: {user_info}
 
     write things ike how to plan escape routes, where to hide for safety, how to make makeshift items to help, etc. Be generous with how much info you tell them. Don't keep these tips short. Make them at least a paragraph each and add examples. 
     Seperate each tip with a new line. Remember each tip should be at least 5 sentences long. For example, don't say "plan an evacuation route", make it detailed about how you make a good evacuation plan.
-    This should be muiple paragraphs long.
+    This should be multiple paragraphs long. Remember to take into account the specific information about the user and factor that into your reponse and tips.
+    
+    Format your response as a JSON object. like the following:
+
+    concern: true or false value based on whether there are any emergencies to be worried about
+    emergencies: a list of relevent emergencies to be worried about, their name and location listed
+    summary: a short blurb about what's happening and what to know immidiately
+    extended_info: the large amount of information the user should know described in other places in this prompt, formatted as a simple string
     """
 
     data = {

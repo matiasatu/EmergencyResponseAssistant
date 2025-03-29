@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
 
-  let summaryText = '';
+  let summaryText = 'No summary available';
   let isLoading = true;
   let hasError = false;
   let errorMessage = '';
@@ -9,16 +9,19 @@
   async function fetchSummary() {
     isLoading = true;
     hasError = false;
-    
+
     try {
       const response = await fetch('http://127.0.0.1:8000/summary/ggarzia');
-      
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
-      
+
       const data = await response.json();
-      summaryText = data.summary || 'No summary available';
+      const parsed = JSON.parse(data)
+      console.log(parsed.summary);
+
+      summaryText = parsed.summary || 'No summary available';
     } catch (error) {
       console.error('Failed to fetch summary:', error);
       hasError = true;
@@ -28,13 +31,11 @@
     }
   }
 
-  onMount(() => {
-    fetchSummary();
-  });
-
   function handleRefresh() {
     fetchSummary();
   }
+
+  onMount(fetchSummary);
 </script>
 
 <main class="max-w-3xl mx-auto p-8 font-sans">

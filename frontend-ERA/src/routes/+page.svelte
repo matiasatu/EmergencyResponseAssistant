@@ -9,7 +9,7 @@
 <main>
 
   <div>
-    <div class="relative w-full h-[550gitpx] overflow-hidden">
+    <div class="relative w-full h-[550px] overflow-hidden">
       <video
         autoplay
         muted

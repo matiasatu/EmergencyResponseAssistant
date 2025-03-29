@@ -20,7 +20,7 @@ class Account(BaseModel):
     zipcode: int
     bio: str
 
-@app.get("/")
+@app.on_event("startup")
 def root():
     global con
     con = sqlite3.connect("emergencyResponseAssistant.db", check_same_thread=False)

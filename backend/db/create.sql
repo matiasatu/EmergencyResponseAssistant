@@ -6,3 +6,9 @@ CREATE TABLE IF NOT EXISTS user (
     location TEXT NOT NULL,
     bio TEXT
 );
+
+CREATE TABLE IF NOT EXISTS summary (
+    username TEXT,
+    summary TEXT,
+    FOREIGN KEY (username) REFERENCES user(username)
+);

@@ -54,9 +54,18 @@ def emergency():
         report = report.replace('\n', '')
         reportDict = json.loads(report)
 
-        if(reportDict["concern"]):
-            print(reportDict["summary"])
+        if reportDict["concern"]:
             send_text(u["phone_number"], reportDict["summary"])
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM summary WHERE username=?", [u["username"]])
+
+            if cur.fetchall():
+                cur.execute("UPDATE summary SET summary=? WHERE username=?", [reportDict["extended_info"], u["username"]])
+                con.commit()
+            else:
+                cur.execute("INSERT INTO summary VALUES(?,?)", [u["username"], reportDict["extended_info"]])
+                con.commit()
 
 @app.get("/summary/{username}")
 def get_summary(username: str):
@@ -72,6 +81,8 @@ def get_summary(username: str):
     return JSONResponse(json.dumps(r))
 
 # FUNCTIONS --------------------
+
+
 
 def get_emergency_information() -> List[Dict[str, Any]]:
     """

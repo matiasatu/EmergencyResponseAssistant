@@ -12,3 +12,9 @@ CREATE TABLE IF NOT EXISTS summary (
     summary TEXT,
     FOREIGN KEY (username) REFERENCES user(username)
 );
+
+CREATE TABLE IF NOT EXISTS messages (
+    username TEXT,
+    output TEXT NOT NULL,
+    FOREIGN KEY (username) REFERENCES user(username)
+);

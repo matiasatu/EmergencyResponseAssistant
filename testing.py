@@ -171,6 +171,7 @@ def check_impact_on_location(my_location: str = "San Francisco, CA", user_info: 
     summary: a short blurb about what's happening and what to know immidiately
     extended_info: the large amount of information the user should know described in other places in this prompt, formatted as a simple string
     
+    be very strict about this formatting, have nothing else in your response besides this json object. have no new lines in your response. remember to close the bracket.
 
 
     """

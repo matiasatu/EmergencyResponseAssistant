@@ -14,6 +14,8 @@ class Account(BaseModel):
     zipcode: int
     bio: str
 
+# ENDPOINTS ----------------
+
 @app.on_event("startup")
 def root():
     global con
@@ -25,14 +27,13 @@ def root():
         script = f.read()
         cur.executescript(script)
 
-def send_text(text_str: str):
-    ...
-
 @app.post("/create-account/")
 def create_account(a: Account):
     cur = con.cursor()
     cur.execute("INSERT INTO user VALUES(?,?,?,?,?)", [a.username, a.phone_number, a.email, a.zipcode, a.bio])
     con.commit()
+
+# FUNCTIONS --------------------
 
 def get_relevant_users(zipcode: int) -> list[dict]:
     cur = con.cursor()
@@ -53,10 +54,9 @@ def get_relevant_users(zipcode: int) -> list[dict]:
 
 def send_text(number: int, msg: str):
     carriers = {
-        'att':	'@mms.att.net',
+        'AT&T':	'@mms.att.net',
         'T-Mobile USA, Inc.':' @tmomail.net',
-        'Verizon Wireless':  '@vtext.com',
-        'sprint':   '@page.nextel.com'
+        'Verizon Wireless':  '@vtext.com'
     }
 
     config = configparser.ConfigParser()
@@ -71,7 +71,7 @@ def send_text(number: int, msg: str):
     client = Client(sid, twilioAuth)
 
     numberData = client.lookups.v2.phone_numbers(f"+1{number}").fetch(fields='line_type_intelligence')
-
+    numberData.line_type_intelligence["carrier_name"]
     to_number = f"{number}{carriers[numberData.line_type_intelligence["carrier_name"]]}"
 
     server = smtplib.SMTP("smtp.gmail.com", 587)
@@ -85,7 +85,7 @@ def send_text(number: int, msg: str):
 
 @app.get("/test-send-text")
 def test_send():
-    send_text(6034568515, "test")
+    send_text(7206821818, "test")
 
 @app.get("/test-get-users")
 def get_users():

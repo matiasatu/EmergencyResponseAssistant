@@ -235,9 +235,9 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     except Exception as e:
         return f"Unexpected error during analysis: {str(e)}"
 
-def get_relevant_users(zipcode: int) -> list[dict]:
+def get_users() -> list[dict]:
     cur = con.cursor()
-    cur.execute("SELECT * FROM user WHERE zipcode=?", [zipcode])
+    cur.execute("SELECT * FROM user")
 
     output = []
     for x in cur.fetchall():

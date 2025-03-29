@@ -6,91 +6,62 @@
   const pastDisasters = () => goto('/past-disasters');
 </script>
 
-<main >
-  <div class="container">
+<main>
+
+  <div>
+    <div class="relative w-full h-[500px] overflow-hidden">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        class="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
+      >
+        <source src="/backgroundvid.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
     
-    <div class="title">
-      <h1>Emergency Response Assistant</h1>
-      <p>
-        Sign up for automated notifications about emergencies in your area, with specialized suggestions using your info.
-      </p>
+      <div class="absolute top-0 left-0 w-full h-full bg-black/20 z-[-1]"></div>
+
+      <div class="relative flex flex-col justify-center items-center h-full text-white text-center px-4 z-10">
+        <div class="flex flex-row">
+        <h1 class="pb-1 text-6xl font-bold">guardian</h1>
+        <h1 class="pb-1 text-6xl font-bold brand-text">.ai</h1>
+        </div>
+        <h2 class="pb-10 text-2xl gray-text">an emergency response assistant</h2>
+        <div class="w-[50%]">
+          <p class="text-md gray-text">
+            Sign up to receive instant alerts about emergencies in your area—tailored specifically to you.
+            guardian.ai harnesses the speed of modern AI to deliver personalized disaster guidance and help keep you safe when it matters most.          </p>     
+        </div>
+      </div>
     </div>
     
     
+    
     <!-- Action Buttons -->
-    <div class="action-buttons">
+    <div class="flex pt-30 pb-30 w-full justify-center text-center items-center gap-10 img-bg">
       <button 
         on:click={signUp} 
-        class="action-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-        </svg>
+        class="flex justify-center text-center items-center gap-2 bg-black text-white size-50 px-5 py-2 rounded-full shadow-md hover:bg-brand transition">
         Sign Up
       </button>
       
       <button 
         on:click={currentDisaster} 
-        class="action-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z" clip-rule="evenodd" />
-        </svg>
+        class="flex justify-center items-center gap-2 bg-black text-white size-50 px-5 py-2 rounded-full shadow-md hover:bg-brand transition">
         Current Disasters
       </button>
 
-    
-    <button 
-      on:click={pastDisasters} 
-      class="action-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
-      </svg>
-      Past Disasters
-    </button>
-  </div>
-    
-  
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="">
-      <p class="opacity-70 text-sm">© 2025 Emergency Response Assistant. All rights reserved.</p>
+      <button 
+        on:click={pastDisasters} 
+        class="flex justify-center items-center gap-2 bg-black text-white size-50 px-5 py-2 rounded-full shadow-md hover:bg-brand transition">
+
+        Past Disasters
+      </button>
     </div>
-  </footer>
+
+  </div>
 </main>
 
-<style>
-  .container {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-  }
 
-  .title {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .action-buttons {
-    padding: 50px 50px;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-
-  .action-btn {
-    width: 100px;
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-</style>

@@ -195,101 +195,101 @@
   }
 </script>
 
-<main class="container">
-  <div class="profile-card">
-    <h1>Create Your Profile</h1>
+<main class="w-full flex justify-center items-center min-h-screen bg-gray-100 p-6">
+  <div class="bg-white shadow-lg rounded-lg p-6 max-w-lg w-full">
+    <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Create Your Profile</h1>
     
     {#if formSuccess}
-      <div class="success-message">
+      <div class="bg-green-100 text-green-700 p-4 rounded mb-4 text-center">
         <p>Profile created successfully!</p>
       </div>
     {:else}
-      <form on:submit|preventDefault={handleSubmit}>
-        <div class="form-group">
-          <label for="username">Username <span class="required">*</span></label>
+      <form on:submit|preventDefault={handleSubmit} class="space-y-4">
+        <div>
+          <label for="username" class="block text-gray-600 font-medium">Username <span class="text-red-500">*</span></label>
           <input 
             type="text" 
             id="username" 
             bind:value={username} 
-            class:error={formSubmitted && usernameError} 
+            class="w-full p-2 border rounded focus:ring focus:ring-blue-300 {formSubmitted && usernameError ? 'border-red-500' : 'border-gray-300'}" 
             on:blur={validateUsername}
           />
           {#if formSubmitted && usernameError}
-            <p class="error-message">{usernameError}</p>
+            <p class="text-red-500 text-sm mt-1">{usernameError}</p>
           {/if}
         </div>
         
-        <div class="form-group">
-          <label for="email">Email <span class="required">*</span></label>
+        <div>
+          <label for="email" class="block text-gray-600 font-medium">Email <span class="text-red-500">*</span></label>
           <input 
             type="email" 
             id="email" 
             bind:value={email} 
-            class:error={formSubmitted && emailError} 
+            class="w-full p-2 border rounded focus:ring focus:ring-blue-300 {formSubmitted && emailError ? 'border-red-500' : 'border-gray-300'}" 
             on:blur={validateEmail}
           />
           {#if formSubmitted && emailError}
-            <p class="error-message">{emailError}</p>
+            <p class="text-red-500 text-sm mt-1">{emailError}</p>
           {/if}
         </div>
         
-        <div class="form-group">
-          <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+        <div>
+          <label for="phoneNumber" class="block text-gray-600 font-medium">Phone Number <span class="text-red-500">*</span></label>
           <input 
             type="tel" 
             id="phoneNumber" 
             value={phoneNumber}
-            class:error={formSubmitted && phoneNumberError} 
+            class="w-full p-2 border rounded focus:ring focus:ring-blue-300 {formSubmitted && phoneNumberError ? 'border-red-500' : 'border-gray-300'}" 
             on:input={formatPhoneNumber}
             on:blur={validatePhoneNumber}
             placeholder="123-456-7890"
           />
           {#if formSubmitted && phoneNumberError}
-            <p class="error-message">{phoneNumberError}</p>
+            <p class="text-red-500 text-sm mt-1">{phoneNumberError}</p>
           {/if}
         </div>
         
-        <div class="form-group">
-          <label for="zipcode">Zip Code <span class="required">*</span></label>
+        <div>
+          <label for="zipcode" class="block text-gray-600 font-medium">Zip Code <span class="text-red-500">*</span></label>
           <input 
             type="text" 
             id="zipcode" 
             value={zipcode}
-            class:error={formSubmitted && zipcodeError} 
+            class="w-full p-2 border rounded focus:ring focus:ring-blue-300 {formSubmitted && zipcodeError ? 'border-red-500' : 'border-gray-300'}" 
             on:input={formatZipcode}
             on:blur={validateZipcode}
             placeholder="12345 or 12345-6789"
           />
           {#if formSubmitted && zipcodeError}
-            <p class="error-message">{zipcodeError}</p>
+            <p class="text-red-500 text-sm mt-1">{zipcodeError}</p>
           {/if}
         </div>
         
-        <div class="form-group">
-          <label for="bio">Bio <span class="required">*</span></label>
+        <div>
+          <label for="bio" class="block text-gray-600 font-medium">Bio <span class="text-red-500">*</span></label>
           <textarea 
             id="bio" 
             bind:value={bio} 
-            class:error={formSubmitted && bioError} 
+            class="w-full p-2 border rounded focus:ring focus:ring-blue-300 {formSubmitted && bioError ? 'border-red-500' : 'border-gray-300'}" 
             on:blur={validateBio}
             rows="4"
             placeholder="Tell us about yourself..."
           ></textarea>
           {#if formSubmitted && bioError}
-            <p class="error-message">{bioError}</p>
+            <p class="text-red-500 text-sm mt-1">{bioError}</p>
           {/if}
-          <div class="character-count">
+          <div class="text-sm text-gray-500 mt-1">
             {bio.length} characters
           </div>
         </div>
         
         {#if serverError}
-          <div class="server-error">
+          <div class="bg-red-100 text-red-700 p-4 rounded mb-4 text-center">
             <p>{serverError}</p>
           </div>
         {/if}
         
-        <button type="submit" class="submit-button" disabled={isLoading}>
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:bg-gray-400" disabled={isLoading}>
           {#if isLoading}
             Creating Profile...
           {:else}
@@ -301,117 +301,4 @@
   </div>
 </main>
 
-<style>
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f5f5f5;
-    padding: 20px;
-  }
-  
-  .profile-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 32px;
-    width: 100%;
-    max-width: 500px;
-  }
-  
-  h1 {
-    margin-top: 0;
-    margin-bottom: 24px;
-    color: #333;
-    font-size: 24px;
-    text-align: center;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #555;
-  }
-  
-  .required {
-    color: #e53935;
-  }
-  
-  input, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    transition: border-color 0.2s;
-  }
-  
-  input:focus, textarea:focus {
-    border-color: #4a90e2;
-    outline: none;
-  }
-  
-  input.error, textarea.error {
-    border-color: #e53935;
-  }
-  
-  .error-message {
-    color: #e53935;
-    font-size: 14px;
-    margin-top: 4px;
-    margin-bottom: 0;
-  }
-  
-  .server-error {
-    background-color: #ffebee;
-    border: 1px solid #ffcdd2;
-    border-radius: 4px;
-    padding: 12px;
-    margin-bottom: 20px;
-    color: #c62828;
-  }
-  
-  .character-count {
-    text-align: right;
-    font-size: 12px;
-    color: #777;
-    margin-top: 4px;
-  }
-  
-  .submit-button {
-    background-color: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.2s;
-  }
-  
-  .submit-button:hover:not(:disabled) {
-    background-color: #3a7bd5;
-  }
-  
-  .submit-button:disabled {
-    background-color: #b0bec5;
-    cursor: not-allowed;
-  }
-  
-  .success-message {
-    background-color: #e8f5e9;
-    border: 1px solid #c8e6c9;
-    border-radius: 4px;
-    padding: 16px;
-    text-align: center;
-    color: #2e7d32;
-  }
-</style>
+

@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap");
+@import "tailwindcss";
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@plugin 'flowbite/plugin';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+    font-family: "Red Hat Display", sans-serif;
+}
+  
+@theme {
+  --color-primary-50: #fff5f2;
+  --color-primary-100: #fff1ee;
+  --color-primary-200: #ffe4de;
+  --color-primary-300: #ffd5cc;
+  --color-primary-400: #ffbcad;
+  --color-primary-500: #fe795d;
+  --color-primary-600: #ef562f;
+  --color-primary-700: #eb4f27;
+  --color-primary-800: #cc4522;
+  --color-primary-900: #a5371b;
+}
+
+.landing-page-bg  {
+    background-image: url("https://www.w3schools.com/images/img_academy_up_css_160.webp");
+}
+
+.brand-text {
+    color: #f33d0c;
+}
+
+.dark-gray-text {
+    color: rgb(97, 97, 97);
+}
+
+.gray-text {
+    color: rgb(198, 198, 198);
+}
+
+@source "../node_modules/flowbite-svelte/dist";
+/* custom css goes here */

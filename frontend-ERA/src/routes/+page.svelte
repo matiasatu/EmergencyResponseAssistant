@@ -43,20 +43,22 @@
   <div class="flex w-full justify-center text-center items-center pt-20 gap-20 img-bg">
     <button 
       on:click={signUp} 
-      class="landing-btn flex justify-center text-center items-center gap-2 bg-white text-black w-50 h-20 px-5 py-2 rounded-lg shadow-md hover:bg-brand transition">
+      class="landing-btn flex justify-center flex-row items-center gap-2 bg-white w-50 h-20 px-5 py-2 rounded-full shadow-md transition">
+      <img class="w-[30px] h-[30px]" alt="disaster icon" src="person_add.png">
       Sign Up
     </button>
     
     <button 
       on:click={currentDisaster} 
-      class="landing-btn flex justify-center items-center gap-2 bg-white w-50 h-20 px-5 py-2 rounded-lg shadow-md transition">
+      class="landing-btn flex justify-center flex-row items-center gap-2 bg-white w-50 h-20 px-5 py-2 rounded-full shadow-md transition">
+      <img class="w-[30px] h-[30px]" alt="disaster icon" src="disaster.png">
       Current Disasters
     </button>
   
     <button 
       on:click={pastDisasters} 
-      class="landing-btn flex justify-center items-center gap-2 bg-white w-50 h-20 px-5 py-2 rounded-lg shadow-md transition">
-  
+      class="landing-btn flex justify-center flex-row items-center gap-2 bg-white w-50 h-20 px-5 py-2 rounded-full shadow-md transition">
+      <img class="w-[30px] h-[30px]" alt="disaster icon" src="history.png">
       Past Disasters
     </button>
   </div>

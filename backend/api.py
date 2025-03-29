@@ -22,6 +22,10 @@ class Account(BaseModel):
     location: str
     bio: str
 
+class Message(BaseModel):
+    username: str
+    msg: str
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -54,9 +58,18 @@ def emergency():
         report = report.replace('\n', '')
         reportDict = json.loads(report)
 
-        if(reportDict["concern"]):
-            print(reportDict["summary"])
+        if reportDict["concern"]:
             send_text(u["phone_number"], reportDict["summary"])
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM summary WHERE username=?", [u["username"]])
+
+            if cur.fetchall():
+                cur.execute("UPDATE summary SET summary=? WHERE username=?", [reportDict["extended_info"], u["username"]])
+                con.commit()
+            else:
+                cur.execute("INSERT INTO summary VALUES(?,?)", [u["username"], reportDict["extended_info"]])
+                con.commit()
 
 @app.get("/summary/{username}")
 def get_summary(username: str):
@@ -71,7 +84,107 @@ def get_summary(username: str):
     }
     return JSONResponse(json.dumps(r))
 
+@app.get("/user/{username}")
+def get_user(username: str):
+    cur = con.cursor()
+    cur.execute("SELECT * FROM user WHERE username=?", [username])
+
+    x = cur.fetchone()
+
+    u = {
+        "username": x[0],
+        "phone_number": x[1],
+        "email": x[2],
+        "location": x[3],
+        "bio": x[4]
+    }
+
+    return JSONResponse(json.dumps(u))
+
+@app.post("/live-feedback/")
+def feedback(msg: Message):
+    cur = con.cursor()
+    cur.execute("SELECT * FROM messages WHERE username=?", [msg.username])
+
+    row = cur.fetchone()
+
+    config = configparser.ConfigParser()
+    config.read(".env")
+    API_KEY = config["groq"]["GROQ_API_KEY"]
+    API_URL = "https://api.groq.com/openai/v1/chat/completions"
+
+    prompt = f"""
+    Using the following description give me any feedback on the description and any improvements I could make. 
+    Consider medical conditions, disabilities, other people or pets in the users home they may need to take care of, unique details about the users transportation situation and anything else you think would be relevant.
+    Campare your feedback to the last feedback you gave to me.
+    {msg.msg}
+    Your ouput should be a valid json object containing the following keys "different" and "feedback" and "last"
+    "different" should be a boolean that is true if your feedback is significantly different than the last feedback you gave.
+    Make sure to think hard about the differneces between your current response and your last response
+    "feedback" is 1 or 2 sentences of feedback on how the user could improve their description if "different" is true. "feedback" should be "none" if "different" is false.
+    Your only output should be this json object
+    "last" should be the last response you gave
+    """
+
+    if row is not None:
+        m = row[1]
+    else:
+        m = "None"
+
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    print(m)
+    data = {
+        "model": "llama3-70b-8192",
+        "messages": [
+            {"role": "system", "content": 
+             "You are helping people write descriptions containting information about their unique needs in an natural disaster or emergency situation.\
+              Provide guidance on sections of their description that need more information or sections that could be added to improve their description"},
+            {"role": "user", "content": f"The last feedback you gave was {m}"},
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": 0.3  # Lower temperature for more factual responses
+    }
+
+    try:
+        response = requests.post(API_URL, headers=headers, json=data)
+        response.raise_for_status()
+        
+        result = response.json()
+        if 'choices' in result and len(result['choices']) > 0:
+            feedback = result['choices'][0]['message']['content']
+
+            feedbackDict = json.loads(feedback)
+
+            if feedbackDict["different"]:
+                cur = con.cursor()
+                cur.execute("SELECT * FROM messages WHERE username=?", [msg.username])
+
+                if cur.fetchall():
+                    cur.execute("UPDATE messages SET output=? WHERE username=?", [feedbackDict["feedback"], msg.username])
+                    con.commit()
+                else:
+                    cur.execute("INSERT INTO messages VALUES(?,?)", [msg.username, feedbackDict["feedback"]])
+                    con.commit()
+
+            print(feedback)
+            # return analysis
+        else:
+            return f"Error: Unable to get a proper response from Groq API. Response: {result}"
+            
+    except requests.RequestException as e:
+        return f"Error communicating with Groq API: {str(e)}"
+    except json.JSONDecodeError:
+        return f"Error parsing response from Groq API. Response was not valid JSON."
+    except Exception as e:
+        return f"Unexpected error during analysis: {str(e)}"
+
+
 # FUNCTIONS --------------------
+
+
 
 def get_emergency_information() -> List[Dict[str, Any]]:
     """
@@ -214,7 +327,12 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     formatted_emergencies = "\n".join(emergency_descriptions)
     print(formatted_emergencies)
     # Send to Groq API
-    API_KEY = "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"
+
+    config = configparser.ConfigParser()
+    config.read(".env")
+    API_KEY = config["groq"]["GROQ_API_KEY"]
+
+    # API_KEY = "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"
     API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
     headers = {

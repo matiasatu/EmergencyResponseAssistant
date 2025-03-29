@@ -9,7 +9,7 @@
 <main>
 
   <div>
-    <div class="relative w-full h-[500px] overflow-hidden">
+    <div class="relative w-full h-[550gitpx] overflow-hidden">
       <video
         autoplay
         muted
@@ -22,19 +22,28 @@
       </video>
     
       <div class="absolute top-0 left-0 w-full h-full bg-black/20 z-[-1]"></div>
-
       <div class="relative flex flex-col justify-center items-center h-full text-white text-center px-4 z-10">
-        <div class="flex flex-row">
-        <h1 class="pb-1 text-6xl font-bold">guardian</h1>
-        <h1 class="pb-1 text-6xl font-bold brand-text">.ai</h1>
+        <div class="flex items-center justify-center">
+          <h1 class="pb-1 text-6xl font-bold">guardian</h1>
+          <h1 class="pb-1 text-6xl font-bold brand-text">.ai</h1>
         </div>
-        <h2 class="pb-10 text-2xl gray-text">an emergency response assistant</h2>
-        <div class="w-[50%]">
-          <p class="text-md gray-text">
-            Sign up to receive instant alerts about emergencies in your area—tailored specifically to you.
-            guardian.ai harnesses the speed of modern AI to deliver personalized disaster guidance and help keep you safe when it matters most.          </p>     
+      
+        <h2 class="pb-10 text-2xl">an emergency response assistant</h2>
+      
+        <div class="w-full md:w-1/2 space-y-4">
+          <p class="text-lg">
+            Sign up to receive instant alerts about emergencies in your area— 
+            <span class="text-xl font-bold brand-text">tailored specifically to you.</span>
+          </p>
+      
+          <p class="text-lg">
+            guardian.ai harnesses the speed of modern AI to deliver personalized disaster guidance and help 
+            <span class="text-xl font-bold brand-text">keep you safe</span> when it matters most.
+          </p>
         </div>
       </div>
+      
+      
     </div>
     
     

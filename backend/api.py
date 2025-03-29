@@ -42,9 +42,11 @@ def emergency():
     for u in users:
         report = generate_report(u["location"], u["bio"])
         report = report.replace('\n', '')
-        # reportDict = json.loads(report)
-        with open(f"{u["username"]}.json", "w") as f:
-            f.write(report)
+        reportDict = json.loads(report)
+
+        if(reportDict["concern"]):
+            print(reportDict["summary"])
+            send_text(u["phone_number"], reportDict["summary"])
 
 
 # FUNCTIONS --------------------
@@ -219,8 +221,12 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
 
     concern: true or false value based on whether there are any emergencies to be worried about
     emergencies: a list of relevent emergencies to be worried about, their name and location listed
-    summary: a short blurb about what's happening and what to know immidiately
+    summary: a short blurb about what's happening and what to know immidiately. this should only be a few words. Example : "WARNING! WILDFIRES NEARBY. CHECK WEBSITE FOR MORE INFO". Alaways have the check website for mroe info part there
     extended_info: the large amount of information the user should know described in other places in this prompt, formatted as a simple string
+    
+    be very strict about this formatting, have nothing else in your response besides this json object. have no new lines in your response. remember to close the bracket.
+
+
     """
 
     data = {

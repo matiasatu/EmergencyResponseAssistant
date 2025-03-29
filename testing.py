@@ -100,7 +100,7 @@ def get_emergency_information() -> List[Dict[str, Any]]:
     
     return all_emergencies
 
-def check_impact_on_location(my_location: str = "San Francisco, CA") -> str:
+def check_impact_on_location(my_location: str = "San Francisco, CA", user_info: str = "") -> str:
     """
     Sends emergency information to Groq LLM API to assess if the user's location
     might be impacted by any recent emergency events.
@@ -148,8 +148,8 @@ def check_impact_on_location(my_location: str = "San Francisco, CA") -> str:
     }
 
     prompt = f"""
-    Based on the following recent emergency events, analyze if the location "{my_location}" might be affected by any of them.
-    Consider distance, type of emergency, and other relevant factors. If there are any precautions the person should take, please include those.
+    Based on the following recent emergency events, analyze if my location "{my_location}" might be affected by any of them.
+    Consider distance, type of emergency, and other relevant factors. If there are any precautions the person should take, include those.
     Treat all events as if they are happening right now. If there are historical FEMA events, treat them like they are currently ongoing. Be generous with declarcing emergencies.
     If there is one happening nearby, even if status is unknown, assume the worst as to be safe is better than to be sorry.
     
@@ -157,13 +157,22 @@ def check_impact_on_location(my_location: str = "San Francisco, CA") -> str:
     {formatted_emergencies}
     
     MY LOCATION: {my_location}
-    
-    Format your response first with a boolean if there are any emergencies to be concerned about. Be extremely strict about this response. Do not add anything outside of the JSON. If it is false, only respond with false. If it is true,
-    respond with a json of an array of the names of the emergencies to be concerned about, as well as their location. After the array, wite another json entry titled summary. Summary should be a very long section
-    that using what you know about the user, write them more specific things they need to know to be safe in this situation. Like how to plan escape routes, where to hide for safety,
-    how to make makeshift items to help, etc. Be generous with how much info you tell them. Don't keep these tips short. Make them at least a paragraph each and add examples. 
+
+    USER INFO: {user_info}
+
+    write things ike how to plan escape routes, where to hide for safety, how to make makeshift items to help, etc. Be generous with how much info you tell them. Don't keep these tips short. Make them at least a paragraph each and add examples. 
     Seperate each tip with a new line. Remember each tip should be at least 5 sentences long. For example, don't say "plan an evacuation route", make it detailed about how you make a good evacuation plan.
-    This should be muiple paragraphs long.
+    This should be multiple paragraphs long. Remember to take into account the specific information about the user and factor that into your reponse and tips.
+    
+    Format your response as a JSON object. like the following:
+
+    concern: true or false value based on whether there are any emergencies to be worried about
+    emergencies: a list of relevent emergencies to be worried about, their name and location listed
+    summary: a short blurb about what's happening and what to know immidiately
+    extended_info: the large amount of information the user should know described in other places in this prompt, formatted as a simple string
+    
+
+
     """
 
     data = {
@@ -197,9 +206,10 @@ def check_impact_on_location(my_location: str = "San Francisco, CA") -> str:
 if __name__ == "__main__":
     # Example location - replace with your actual location when running the script
     MY_LOCATION = "Jefferson County, OR"  # You can modify this with your actual location
+    USER_INFO = "i have asthma and a bad leg"
     
     # Get analysis of potential impact
-    analysis = check_impact_on_location(MY_LOCATION)
+    analysis = check_impact_on_location(MY_LOCATION, USER_INFO)
     
     # Print the result
     print("\n=== EMERGENCY IMPACT ANALYSIS ===")

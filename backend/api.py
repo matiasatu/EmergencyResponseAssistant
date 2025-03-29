@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import sqlite3
-import json
+from twilio.rest import Client
+import configparser
+import smtplib
 
 app = FastAPI()
 
@@ -49,9 +51,42 @@ def get_relevant_users(zipcode: int) -> list[dict]:
 
     return output
 
-# TESTING FUNCS ----------------------------------
+def send_text(number: int, msg: str):
+    carriers = {
+        'att':	'@mms.att.net',
+        'T-Mobile USA, Inc.':' @tmomail.net',
+        'Verizon Wireless':  '@vtext.com',
+        'sprint':   '@page.nextel.com'
+    }
+
+    config = configparser.ConfigParser()
+
+    config.read(".env")
+
+    googleAuthPass = config["sms"]["GOOGLE_APP_PASSWORD"]
+    googleAuthName = config["sms"]["GOOGLE_EMAIL"]
+    twilioAuth = config["twilio"]["TWILIO_AUTH_KEY"]
+    sid = config["twilio"]["TWILIO_SID"]
+
+    client = Client(sid, twilioAuth)
+
+    numberData = client.lookups.v2.phone_numbers(f"+1{number}").fetch(fields='line_type_intelligence')
+
+    to_number = f"{number}{carriers[numberData.line_type_intelligence["carrier_name"]]}"
+
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(googleAuthName, googleAuthPass)
+
+    server.sendmail(googleAuthName, to_number, msg)
 
 
-@app.get("/test_get_users")
+# TESTING ENDPOINTS ----------------------------------
+
+@app.get("/test-send-text")
+def test_send():
+    send_text(6034568515, "test")
+
+@app.get("/test-get-users")
 def get_users():
     print(get_relevant_users(10000))

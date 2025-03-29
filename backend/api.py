@@ -17,7 +17,7 @@ class Account(BaseModel):
     username: str
     email: str
     phone_number: int
-    zipcode: int
+    location: int
     bio: str
 
 @app.on_event("startup")
@@ -33,12 +33,15 @@ def root():
 @app.post("/create-account/")
 def create_account(a: Account):
     cur = con.cursor()
-    cur.execute("INSERT INTO user VALUES(?,?,?,?,?)", [a.username, a.phone_number, a.email, a.zipcode, a.bio])
+    cur.execute("INSERT INTO user VALUES(?,?,?,?,?)", [a.username, a.phone_number, a.email, a.location, a.bio])
     con.commit()
 
 @app.get("/start_flow")
-def emergency(location:str, user_info: str):
-    generate_report(location, user_info)
+def emergency():
+    users = get_users()
+    for u in users:
+        report = json.loads(generate_report(u["location"], u["bio"]))
+
 
 # FUNCTIONS --------------------
 
@@ -148,6 +151,12 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
         
     Returns:
         str: Analysis from Groq LLM on potential impacts
+        {
+            concers: bool,
+            emergencies: list[json],
+            summary: str, 
+            text_msg: str
+        }
     """
     # Get emergency information
     print("FETCHING EMERGENCY INFORMATION...\n")
@@ -245,7 +254,7 @@ def get_users() -> list[dict]:
             "username": x[0],
             "phone_number": x[1],
             "email": x[2],
-            "zipcode": x[3],
+            "location": x[3],
             "bio": x[4]
         }
         output += [account]

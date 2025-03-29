@@ -17,16 +17,16 @@ class Account(BaseModel):
     username: str
     email: str
     phone_number: int
-    location: int
+    location: str
     bio: str
 
 @app.on_event("startup")
 def root():
     global con
-    con = sqlite3.connect("emergencyResponseAssistant.db", check_same_thread=False)
+    con = sqlite3.connect("db/emergencyResponseAssistant.db", check_same_thread=False)
     cur = con.cursor()
 
-    with open("../db/create.sql", "r") as f:
+    with open("db/create.sql", "r") as f:
         script = f.read()
         cur.executescript(script)
 
@@ -36,11 +36,14 @@ def create_account(a: Account):
     cur.execute("INSERT INTO user VALUES(?,?,?,?,?)", [a.username, a.phone_number, a.email, a.location, a.bio])
     con.commit()
 
-@app.get("/start_flow")
+@app.get("/start-flow")
 def emergency():
     users = get_users()
     for u in users:
-        report = json.loads(generate_report(u["location"], u["bio"]))
+        report = generate_report(u["location"], u["bio"])
+        print(report)
+        # reportDict = json.loads(report)
+        # print(report)
 
 
 # FUNCTIONS --------------------
@@ -297,5 +300,5 @@ def test_send():
     send_text(7206821818, "test")
 
 @app.get("/test-get-users")
-def get_users():
-    print(get_relevant_users(10000))
+def test_get_users():
+    print(get_users())

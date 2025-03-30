@@ -1,11 +1,8 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI
 from pydantic import BaseModel
 import sqlite3
 import requests
-import feedparser
-from datetime import datetime
 import json
-import time
 from typing import List, Dict, Any, Optional
 from twilio.rest import Client
 import configparser
@@ -55,8 +52,8 @@ def emergency():
     users = get_users()
     for u in users:
         report = generate_report(u["location"], u["bio"])
-        report = report #.replace('\n', '')
-        print(report)
+        report = report.replace('\n', ' ')
+
         reportDict = json.loads(report)
 
         if reportDict["concern"]:
@@ -91,14 +88,18 @@ def get_user(username: str):
     cur.execute("SELECT * FROM user WHERE username=?", [username])
 
     x = cur.fetchone()
-
-    u = {
-        "username": x[0],
-        "phone_number": x[1],
-        "email": x[2],
-        "location": x[3],
-        "bio": x[4]
-    }
+    if x is not None:
+        u = {
+            "username": x[0],
+            "phone_number": x[1],
+            "email": x[2],
+            "location": x[3],
+            "bio": x[4]
+        }
+    else:
+        u = {
+            "username": "null"
+        }
 
     return JSONResponse(json.dumps(u))
 

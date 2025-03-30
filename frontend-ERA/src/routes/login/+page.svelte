@@ -1,3 +1,4 @@
+<!-- LOGIN PAGE -->
 <script>
     import * as login from '../../lib/login'
 

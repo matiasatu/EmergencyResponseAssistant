@@ -1,4 +1,5 @@
 <script>
+  import { goto } from '$app/navigation';
 	import '../app.css';
 	let { children } = $props();
 	import { Navbar, NavBrand, NavUl, NavLi } from 'flowbite-svelte';
@@ -6,15 +7,34 @@
 </script>
 
 <div class="flex flex-col min-h-screen">
-	<header class="flex-none">
-		<Navbar class="h-16">
-			<NavBrand href="/">
-				<!-- <img src="/logo.svg" class="mr-3 h-6 sm:h-9" alt="Logo" /> -->
-				<span class="self-center whitespace-nowrap text-xl font-semibold text-black">guardian.ai</span>
-			</NavBrand>
-			<NavUl>
-				<NavLi href="/">Home</NavLi>
-			</NavUl>
+	<header class="flex-none bg-white shadow">
+		<Navbar class="h-20 flex items-center justify-between px-4">
+			<!-- Logo as a button -->
+			<button onclick={() => goto('/')} class="flex items-center space-x-2">
+				<img src="/logo.png" class="h-16" alt="Logo" />
+				<!-- <span class="text-xl font-semibold text-black">guardian.ai</span> -->
+			</button>
+
+			<div class="flex space-x-6">
+				<!-- Home link -->
+				<li class="list-none">
+					<a href="/" class="text-xl text-gray-600 hover:text-orange-500">Home</a>
+				</li>
+				<!-- Ongoing Disasters link -->
+				<li class="list-none">
+					<a href="/current-disaster" class="text-xl text-gray-600 hover:text-orange-500">Ongoing Disasters</a>
+				</li>
+				<!-- Past Disasters link -->
+				<li class="list-none">
+					<a href="/past-disaster" class="text-xl text-gray-600 hover:text-orange-500">Past Disasters</a>
+				</li>
+				<!-- Login link -->
+				<li class="list-none">
+					<a href="/create-account" class="text-xl text-gray-600 hover:text-orange-500">Login</a>
+				</li>
+			</div>
+			
+			
 		</Navbar>
 	</header>
 

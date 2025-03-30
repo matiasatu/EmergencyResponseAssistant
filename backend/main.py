@@ -100,7 +100,7 @@ def get_summary(username: str):
 @app.get("/history/{username}")
 def get_past_disasters(username: str):
     cur = con.cursor()
-    cur.execute("SELECT * FROM summary WHERE username=? ORDER BY id DESC LIMIT 1", [username])
+    cur.execute("SELECT * FROM summary WHERE username=? ORDER BY id DESC", [username])
     rows = cur.fetchall()
 
     summaries = []
@@ -109,6 +109,7 @@ def get_past_disasters(username: str):
         summaries.append(summary)
 
     return JSONResponse(content={"summaries": summaries})
+
 
 @app.get("/user/{username}")
 def get_user(username: str):

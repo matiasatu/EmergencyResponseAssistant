@@ -96,7 +96,8 @@
     {#if !hideFooter}
       <footer class="flex-none bg-gray-200 py-6">
         <div class="container mx-auto text-center text-gray-600">
-          © {new Date().getFullYear()} guardian.ai. All rights reserved.
+          © {new Date().getFullYear()} guardian.ai. All rights reserved. <br>
+          Authors: Gavin Garzia, Matias Pena, Brady Ancell
         </div>
       </footer>
     {/if}

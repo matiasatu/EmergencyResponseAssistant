@@ -7,7 +7,7 @@
 
     async function fetchSummaries(username: string): Promise<string[]> {
         try {
-        const res = await fetch(`http://localhost:8000/history/${username}`);
+        const res = await fetch(`http://10.60.25.182:8000/history/${username}`);
 
         if (!res.ok) {
             throw new Error(`Failed to fetch summaries: ${res.status} ${res.statusText}`);

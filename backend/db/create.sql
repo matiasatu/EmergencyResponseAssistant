@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS user (
 );
 
 CREATE TABLE IF NOT EXISTS summary (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT,
     summary TEXT,
     FOREIGN KEY (username) REFERENCES user(username)

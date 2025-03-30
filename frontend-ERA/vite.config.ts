@@ -7,6 +7,7 @@ export default defineConfig({
 	server: {
 		host: '0.0.0.0',
 		// host: true, Tested with both options
+		allowedHosts: ['guardianai'],
 		port: 5173,
 	  },
 });

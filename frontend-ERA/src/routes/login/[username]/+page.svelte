@@ -7,8 +7,8 @@
       username: string;
     };
   
-    onMount(() => {
-      login.change_user(data.username);
+    onMount(async () => {
+      await login.change_user(data.username);
       goto("/current-disaster");
     });
     

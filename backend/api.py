@@ -116,14 +116,20 @@ def feedback(msg: Message):
     prompt = f"""
     Using the following description give me any feedback on the description and any improvements I could make. 
     Consider medical conditions, disabilities, other people or pets in the users home they may need to take care of, unique details about the users transportation situation and anything else you think would be relevant.
-    Campare your feedback to the last feedback you gave to me.
+    Campare your feedback to the last feedback you gave to me. If you give redundant feedback it will waste the users time so please do not.
+    I do not care what the user inputs only what you feedback is. I.e. if the user gives you a completely new description but your feedback would not be more than 50% different then you should set the "different" .
+    if you just change one or two things in your feedback it is not enough to justify a whole new response 
+    DESCRIPTION:
     {msg.msg}
-    Your ouput should be a valid json object containing the following keys "different" and "feedback" and "last"
-    "different" should be a boolean that is true if your feedback is significantly different than the last feedback you gave.
-    Make sure to think hard about the differneces between your current response and your last response
+    YOUR OUTPUT:
+    Your ouput should be a valid json object containing the following keys "different" and "feedback" and "last" "explanation"
+    "different" should be a boolean that is true if your feedback is more than 50% different than the last feedback you gave.
+    Make sure to think hard about the differneces between your current response and your last response.
+    Only take into account your feedback 
     "feedback" is 1 or 2 sentences of feedback on how the user could improve their description if "different" is true. "feedback" should be "none" if "different" is false.
     Your only output should be this json object
     "last" should be the last response you gave
+    "explanation" is a thorough explanation of the differences between your last response and your current response
     """
 
     if row is not None:

@@ -5,15 +5,17 @@
     import { Navbar } from 'flowbite-svelte';
   
     $: currentPath = $page.url.pathname;
-    $: hideLayout = currentPath === '/';
+    $: hideFooter = currentPath === '/';
   </script>
   
   <div class="flex flex-col min-h-screen">
-    {#if !hideLayout}
       <header class="flex-none bg-white shadow">
         <Navbar class="h-20 flex items-center justify-between px-4">
           <button onclick={() => goto('/')} class="flex items-center space-x-2">
-            <img src="/logo.png" class="h-16" alt="Logo" />
+            <a href="/">
+                <img src="/logo.png" class="h-16" alt="Logo" />
+            </a>
+            
           </button>
   
           <div class="flex space-x-6">
@@ -32,14 +34,13 @@
           </div>
         </Navbar>
       </header>
-    {/if}
   
     <div class="flex flex-col flex-1 w-full">
       <main class="flex-1 w-full h-full">
         <slot />
       </main>
   
-      {#if !hideLayout}
+      {#if !hideFooter}
         <footer class="flex-none bg-gray-200 py-6">
           <div class="container mx-auto text-center text-gray-600">
             © {new Date().getFullYear()} guardian.ai. All rights reserved.

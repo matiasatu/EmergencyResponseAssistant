@@ -40,7 +40,7 @@
       </p>
 
       <p class="text-xl">
-        guardian.ai harnesses the speed of modern AI to deliver personalized disaster guidance and help 
+        guardian.ai harnesses the speed of Groq's AI interface to deliver personalized disaster guidance and help 
         <span class="text-2xl font-bold brand-text">keep you safe</span> when it matters most.
       </p>
     </div>

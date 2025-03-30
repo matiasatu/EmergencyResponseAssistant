@@ -1,8 +1,6 @@
 <script>
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { slide } from 'svelte/transition';
-    import { on } from 'svelte/events';
+    import { goto } from "$app/navigation";
+
 
   let bio = '';
   let showFeedback = false;
@@ -96,6 +94,7 @@
 
       let data = await response.json()
       data = JSON.parse(data)
+      console.log("called groq")
       if(data.new_response){
         bioFeedback = data.response
       }
@@ -170,6 +169,7 @@
         
         formSuccess = true;
         clearInterval(feedbackInterval)
+        
         setTimeout(() => {
           username = '';
           email = '';
@@ -177,8 +177,12 @@
           location = '';
           bio = '';
           formSubmitted = false;
+          onInitialForm = true;
           formSuccess = false;
+          nextBtnClicked = false;
+          goto('/')
         }, 3000);
+        
       } catch (error) {
         console.error('Error creating profile:', error);
         serverError = error.message || 'An unexpected error occurred';

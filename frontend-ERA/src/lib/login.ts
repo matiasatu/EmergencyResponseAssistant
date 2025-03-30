@@ -1,6 +1,6 @@
 var login: string = ""
 
-export async function change_user(new_user: string): Promise<void>{
+export async function change_user(new_user: string): Promise<boolean>{
     const response = await fetch(`http://localhost:8000/user/${new_user}`);
     const data = await response.json();
 
@@ -8,7 +8,10 @@ export async function change_user(new_user: string): Promise<void>{
 
     if(obj.username != "null"){
         login = obj.username
+        return true
     }
+    
+    return false
 }
 
 export function get_user(): string {

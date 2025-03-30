@@ -25,7 +25,7 @@
   let feedbackInterval;
   let intervalStarted = false;
 
-  const API_URL = 'http://localhost:8000/create-account';
+  const API_URL = 'http://18.221.237.212:8000/create-account';
 
   function validateUsername() {
     if (!username) {
@@ -79,7 +79,7 @@
 
   async function getGroqFeedback(bio) {
     try {
-      const response = await fetch('http://127.0.0.1:8000/live-feedback', {
+      const response = await fetch('http://18.221.237.212:8000/live-feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

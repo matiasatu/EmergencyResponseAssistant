@@ -10,10 +10,14 @@ export async function change_user(new_user: string): Promise<boolean>{
         login = obj.username
         return true
     }
-    
+
     return false
 }
 
 export function get_user(): string {
     return login
+}
+
+export function logout(): void {
+    login = ""
 }

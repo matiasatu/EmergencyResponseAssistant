@@ -10,6 +10,10 @@
     let usernameError = ""
     let serverError = ""
 
+    function handleLogout() {
+        login.logout()
+    }
+
     function validateUsername() {
         if (!username) {
         usernameError = 'Username is required';
@@ -79,6 +83,9 @@
             </form>
             <div class="pt-2">
                 <p>Don't have an account? <a class="brand-text" href="/create-account">Sign Up</a></p>
+            </div>
+            <div class="pt-2"> 
+                <a class="brand-text" on:click={handleLogout} href="#">Logout</a>
             </div>
             {/if}
 

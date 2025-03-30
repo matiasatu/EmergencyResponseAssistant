@@ -13,8 +13,7 @@
     hasError = false;
     
     try {
-      const str = '/api/summary/' + user
-      const response = await fetch(str);
+      const response = await fetch(`http://10.60.25.182:8000/summary/${user}`);
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);

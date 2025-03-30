@@ -8,4 +8,5 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY . /code/
 
-CMD ["fastapi", "dev", "api.py", "--port", "8000", "--host", "0.0.0.0", "--reload"]
+# CMD ["fastapi", "dev", "api.py", "--port", "8000", "--host", "0.0.0.0", "--reload"]
+CMD ["uvicorn", "main:app", "--reload", "--port", "8000", "--host", "0.0.0.0"]

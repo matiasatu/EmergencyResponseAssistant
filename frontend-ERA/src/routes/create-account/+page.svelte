@@ -96,13 +96,13 @@
       data = JSON.parse(data)
       console.log("called groq")
       if(data.new_response){
-        bioFeedback = data.response.replace('-', '\n-')
+        bioFeedback = data.response.replace('-', '\\n-')
         console.log(bioFeedback)
       }
       return;
 
     } catch (error) {
-      bioFeedback = "No feedback at the moment."
+      //bioFeedback = "No feedback at the moment."
       console.error('Error fetching Groq feedback:', error)
     }
   }

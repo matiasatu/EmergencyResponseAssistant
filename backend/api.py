@@ -131,7 +131,12 @@ def feedback(msg: Message):
     {msg.msg}
     YOUR OUTPUT:
     bullet points of categories that could be added or updated
-    give me at most 3 bullet points and do not be afraid to repond with 
+    give me at most 3 bullet points and do not be afraid to repond with "No suggestions"
+    each bullet point should be in the format "-%content%\n
+    bullet points do not need to be longer than 5 words
+    if you think there are no suggestions needed reply "No Suggestions"
+    the only output should be these bullet points
+    remember to reply with "No suggestions" when you think the input covers most categories
     """
 
     if row is not None:

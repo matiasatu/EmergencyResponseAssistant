@@ -96,7 +96,7 @@
       data = JSON.parse(data)
       console.log("called groq")
       if(data.new_response){
-        bioFeedback = data.response.replace(/-/g, '<br>-');
+        bioFeedback = data.response
         console.log(bioFeedback)
       }
       return;
@@ -337,7 +337,7 @@
 >
   <h1 class="text-3xl text-white font-bold"> Consider adding.... </h1>  
   <div class="bg-white shadow-base rounded-lg p-4 max-w-lg flex-1 w-full items-stretch">
-    <p>
+    <p style="white-space: pre-line;">
       {bioFeedback}
     </p>
   </div>

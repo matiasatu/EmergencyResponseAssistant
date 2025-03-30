@@ -528,7 +528,7 @@ def send_text(number: int, msg: str, username: str):
 
     row = cur.fetchone()
 
-    email = row[3]
+    email = row[2]
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
     server.login(googleAuthName, googleAuthPass)

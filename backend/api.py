@@ -55,7 +55,8 @@ def emergency():
     users = get_users()
     for u in users:
         report = generate_report(u["location"], u["bio"])
-        report = report.replace('\n', '')
+        report = report #.replace('\n', '')
+        print(report)
         reportDict = json.loads(report)
 
         if reportDict["concern"]:
@@ -116,15 +117,21 @@ def feedback(msg: Message):
     prompt = f"""
     Using the following description give me any feedback on the description and any improvements I could make. 
     Consider medical conditions, disabilities, other people or pets in the users home they may need to take care of, unique details about the users transportation situation and anything else you think would be relevant.
-    make your response sentences concise and constructive for example "consider adding X to help you with Y"
-    You should focus on the charictaristics of the users situation not the things they should do 
-    your response should contain 
+    make your response sentences concise and constructive for example "consider adding X"
+    You should focus on the charictaristics of the users situation not the things they should do
+    focus your response around additional categories of data the user could add rather than the ways they could improve the ones they ahve added
+    for example telling the user that they need to give more information about X is useless but telling them that they did not mention anything in a given category is useful
+    aim for simplicity in your response
+    do not use complicated sentences
+    DO NOT USE COMPLICATED SENTENCES
+    A COMPLICATED SENTENCE IS ONE WITH MULTIPLE CLAUSES
+    YOU ARE GIVING ME COMPLICATED SENTENCES
     DESCRIPTION:
     {msg.msg}
     YOUR OUTPUT:
     a 1 or 2 sentences of feedback on how the user could improve their description.
     make sure that this feedback encompasses every issue you see with the users output.
-    just output these two sentences, no label or anything
+    just output these sentences, no label or anything
     """
 
     if row is not None:
@@ -168,12 +175,12 @@ def feedback(msg: Message):
                     f"""
                     Here are the two responses. a difference of a few words is not enough to consider them different. tell me if the content is different Do not let us down
                     RESPONSE 1:
-                    {input}
+                    {output}
                     RESPONSE 2:
                     {feedback}
                     YOUR OUTPUT:
                     your output should be a single character 'Y' if the responses contain different content. 'N' otherwise
-                    give me an explanation of how the 
+                    DO NOT OUTPUT MORE THAN A SINGLE CHARACTER
                     """}
                 ],
                 "temperature": 0.3  # Lower temperature for more factual responses
@@ -195,12 +202,12 @@ def feedback(msg: Message):
                 else:
                     cur.execute("INSERT INTO messages VALUES(?,?,?)", [msg.username, feedback, msg.msg])
                     con.commit()
-            print("feedback")
-            print(feedback)
-            print("output")
-            print(output)
-            print("different")
-            print(different)
+
+            r = {
+                "new_response": different == 'Y',
+                "response": feedback
+            }
+            return JSONResponse(json.dumps(r))
             # return analysis
         else:
             return f"Error: Unable to get a proper response from Groq API. Response: {result}"
@@ -395,7 +402,7 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     summary: a short blurb about what's happening and what to know immidiately. this should only be a few words. Example : "WARNING! WILDFIRES NEARBY. CHECK WEBSITE FOR MORE INFO". Alaways have the check website for mroe info part there
     extended_info: the large amount of information the user should know described in other places in this prompt, formatted as a simple string
     
-    be very strict about this formatting, have nothing else in your response besides this json object. have no new lines in your response. remember to close the bracket.
+    be very strict about this formatting, have nothing else in your response besides this json object. remember to close the bracket.
 
 
     """

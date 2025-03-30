@@ -407,7 +407,7 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     emergencies: a list of relevent emergencies to be worried about, their name and location listed
     summary: a short blurb about what's happening and what to know immidiately. this should only be a few words. Example : "WARNING! WILDFIRES NEARBY. VIEW THIS FOR MORE INFO". Alaways have VIEW THIS FOR MORE INFO part there.
     extended_info: the large amount of information the user should know described in other places in this prompt, formatted as a simple string.
-    At the top of the extended information, have an emergency overview section. This will be formatted like this: a list of relevent dangerous to the user emergencies, with their status next to them, seperated by a new line. If status is unknown assume active status.Also include rational about how your location and its location is close enough to worry about
+    At the top of the extended information, have an emergency overview section. This will be formatted like this: a list of relevent dangerous to the user emergencies, with their status next to them, seperated by a new line. If status is unknown assume active status.
     Ensure each category has at least 10 sentences in it.
     be very strict about this formatting, have nothing else in your response besides this json object.title each paragraph with  **title**, and backslash n before and after it. remember to close the bracket.
     make sure you use quotes around the values of the json objecy and have a closing bracket at the end of the object

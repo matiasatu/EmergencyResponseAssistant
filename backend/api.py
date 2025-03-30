@@ -52,8 +52,8 @@ def emergency():
     users = get_users()
     for u in users:
         report = generate_report(u["location"], u["bio"])
-        report = report.replace('\n', ' ')
-
+        report = report.replace('\n', '')
+        print(report)
         reportDict = json.loads(report)
 
         if reportDict["concern"]:
@@ -62,12 +62,12 @@ def emergency():
 
             cur.execute("SELECT * FROM summary WHERE username=?", [u["username"]])
 
-            if cur.fetchall():
-                cur.execute("UPDATE summary SET summary=? WHERE username=?", [reportDict["extended_info"], u["username"]])
-                con.commit()
-            else:
-                cur.execute("INSERT INTO summary VALUES(?,?)", [u["username"], reportDict["extended_info"]])
-                con.commit()
+            # if cur.fetchall():
+            #     cur.execute("UPDATE summary SET summary=? WHERE username=?", [reportDict["extended_info"], u["username"]])
+            #     con.commit()
+            # else:
+            cur.execute("INSERT INTO summary VALUES(?,?)", [u["username"], reportDict["extended_info"]])
+            con.commit()
 
 @app.get("/summary/{username}")
 def get_summary(username: str):
@@ -131,7 +131,12 @@ def feedback(msg: Message):
     {msg.msg}
     YOUR OUTPUT:
     bullet points of categories that could be added or updated
-    give me at most 3 bullet points and do not be afraid to repond with 
+    give me at most 3 bullet points and do not be afraid to repond with "No suggestions"
+    each bullet point should be in the format "-%content%\n
+    bullet points do not need to be longer than 5 words
+    if you think there are no suggestions needed reply "No Suggestions"
+    the only output should be these bullet points
+    remember to reply with "No suggestions" when you think the input covers most categories
     """
 
     if row is not None:
@@ -405,7 +410,7 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     At the top of the extended information, have an emergency overview section. This will be formatted like this: a list of relevent dangerous to the user emergencies, with their status next to them, seperated by a new line. If status is unknown assume active status.Also include rational about how your location and its location is close enough to worry about
     Ensure each category has at least 10 sentences in it.
     be very strict about this formatting, have nothing else in your response besides this json object.title each paragraph with  **title**, and backslash n before and after it. remember to close the bracket.
-    make extra sure all newlines aren't actually new lines, and instead are backslask n
+    make extra sure all newlines aren't actually new lines, and instead are backslash n. Don't have any backslashes by themselves.
 
     """
 
@@ -421,11 +426,15 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     try:
         print(f"Sending request to Groq API to analyze impact on {my_location}...")
         response = requests.post(API_URL, headers=headers, json=data)
+        print("HELLO MAN")
         response.raise_for_status()
-        
+        print("here is the result:")
         result = response.json()
+        print(result)
         if 'choices' in result and len(result['choices']) > 0:
             analysis = result['choices'][0]['message']['content']
+
+            print(analysis)
             return analysis
         else:
             return f"Error: Unable to get a proper response from Groq API. Response: {result}"

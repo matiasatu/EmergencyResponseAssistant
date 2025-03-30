@@ -284,7 +284,7 @@ def get_emergency_information() -> List[Dict[str, Any]]:
     fema_data = safe_api_request(fema_url)
     
     if fema_data and 'DisasterDeclarationsSummaries' in fema_data:
-        for disaster in fema_data['DisasterDeclarationsSummaries'][:10]:  # Limit to 10 recent events
+        for disaster in fema_data['DisasterDeclarationsSummaries'][:5]:  # Limit to 10 recent events
             event = {
                 'source': 'FEMA',
                 'type': disaster.get('disasterType', 'Unknown'),
@@ -329,7 +329,7 @@ def get_emergency_information() -> List[Dict[str, Any]]:
     weather_data = safe_api_request(weather_url, headers)
     
     if weather_data and 'features' in weather_data:
-        for alert in weather_data['features'][:10]:  # Limit to 10 recent alerts
+        for alert in weather_data['features'][:5]:  # Limit to 10 recent alerts
             props = alert.get('properties', {})
             
             event = {

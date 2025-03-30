@@ -68,7 +68,7 @@ def emergency():
         print(reportDict)
 
         if reportDict["concern"]:
-            send_text(u["phone_number"], reportDict["summary"])
+            send_text(u["phone_number"], reportDict["summary"], u["username"])
             cur = con.cursor()
 
             cur.execute("SELECT * FROM summary WHERE username=?", [u["username"]])
@@ -478,7 +478,7 @@ def get_users() -> list[dict]:
     print(output)
     return output
 
-def send_text(number: int, msg: str):
+def send_text(number: int, msg: str, username: str):
     carriers = {
         'AT&T':	'@mms.att.net',
         'T-Mobile USA, Inc.':' @tmomail.net',
@@ -505,14 +505,14 @@ def send_text(number: int, msg: str):
         server.starttls()
         server.login(googleAuthName, googleAuthPass)
 
-        server.sendmail(googleAuthName, to_number, msg)
+        server.sendmail(googleAuthName, to_number, msg + f"\nhttp://10.60.25.182:8001/login/{username}")
 
 
 # TESTING ENDPOINTS ----------------------------------
 
 @app.get("/test-send-text")
 def test_send():
-    send_text(7206821818, "test")
+    send_text(7206821818, "test", "")
 
 @app.get("/test-get-users")
 def test_get_users():

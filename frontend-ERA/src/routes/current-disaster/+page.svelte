@@ -35,6 +35,15 @@
     fetchSummary();
   }
 
+  // Function to format text with bold and newlines
+  function formatText(text) {
+    // Replace **text** with <strong>text</strong>
+    const boldFormatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Replace \n with <br />
+    return boldFormatted.replace(/\n/g, '<br />');
+  }
+
   onMount(fetchSummary);
 </script>
 
@@ -58,7 +67,7 @@
     </div>
   {:else}
     <div class="bg-gray-50 p-6 rounded-lg shadow-sm mb-4">
-      <p class="text-gray-800">{summaryText}</p>
+      <p class="text-gray-800">{@html formatText(summaryText)}</p>
       <button 
         on:click={handleRefresh}
         class="mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors duration-200"

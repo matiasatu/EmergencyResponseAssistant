@@ -13,7 +13,7 @@
     hasError = false;
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/summary/matias');
+      const response = await fetch('http://10.60.25.182:8000/summary/matias');
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);

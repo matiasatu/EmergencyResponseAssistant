@@ -52,5 +52,15 @@ body {
     color: white;
 }
 
+.brand-bg {
+    background-color: #f33d0c;
+}
+
+.brand-div {
+    background-color: rgb(238, 238, 238);
+    /* border: 5px solid #f33d0c; */
+}
+
+
 @source "../node_modules/flowbite-svelte/dist";
 /* custom css goes here */

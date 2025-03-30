@@ -26,7 +26,7 @@
 				</li>
 				<!-- Past Disasters link -->
 				<li class="list-none">
-					<a href="/past-disaster" class="text-xl text-gray-600 hover:text-orange-500">Past Disasters</a>
+					<a href="/past-disasters" class="text-xl text-gray-600 hover:text-orange-500">Past Disasters</a>
 				</li>
 				<!-- Login link -->
 				<li class="list-none">

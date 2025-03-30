@@ -1,7 +1,7 @@
 var login: string = ""
 
 export async function change_user(new_user: string): Promise<boolean>{
-    const response = await fetch(`http://18.221.237.212:8000/user/${new_user}`);
+    const response = await fetch(`/api/user/${new_user}`);
     const data = await response.json();
 
     const obj = JSON.parse(data)

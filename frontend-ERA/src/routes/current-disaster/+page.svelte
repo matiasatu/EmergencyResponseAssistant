@@ -11,10 +11,9 @@
   async function fetchSummary() {
     isLoading = true;
     hasError = false;
-
+    
     try {
-      const url = 'http://127.0.0.1:8000/summary/' + user
-      const response = await fetch(url);
+      const response = await fetch(`http://10.60.25.182:8000/summary/${user}`);
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);

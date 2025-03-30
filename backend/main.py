@@ -31,7 +31,13 @@ class Message(BaseModel):
     username: str
     msg: str
 
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 @app.on_event("startup")
 def root():
@@ -55,8 +61,11 @@ def emergency():
     for u in users:
         report = generate_report(u["location"], u["bio"])
         print(report)
+        print(u["username"])
         report = report.replace('\n', '')
         reportDict = json.loads(report)
+
+        print(reportDict)
 
         if reportDict["concern"]:
             send_text(u["phone_number"], reportDict["summary"])
@@ -77,7 +86,10 @@ def get_summary(username: str):
 
     cur.execute("SELECT * FROM summary WHERE username=?", [username])
 
-    _, summary = cur.fetchone()
+    row = cur.fetchone()
+    summary = ""
+    if row is not None:
+        _, summary = row
 
     r = {
         "summary": summary
@@ -463,7 +475,7 @@ def get_users() -> list[dict]:
             "bio": x[4]
         }
         output += [account]
-
+    print(output)
     return output
 
 def send_text(number: int, msg: str):
@@ -485,14 +497,15 @@ def send_text(number: int, msg: str):
     client = Client(sid, twilioAuth)
 
     numberData = client.lookups.v2.phone_numbers(f"+1{number}").fetch(fields='line_type_intelligence')
-    numberData.line_type_intelligence["carrier_name"]
-    to_number = f"{number}{carriers[numberData.line_type_intelligence["carrier_name"]]}"
+    if numberData is not None and numberData.line_type_intelligence is not None:
+        numberData.line_type_intelligence["carrier_name"]
+        to_number = f"{number}{carriers[numberData.line_type_intelligence["carrier_name"]]}"
 
-    server = smtplib.SMTP("smtp.gmail.com", 587)
-    server.starttls()
-    server.login(googleAuthName, googleAuthPass)
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(googleAuthName, googleAuthPass)
 
-    server.sendmail(googleAuthName, to_number, msg)
+        server.sendmail(googleAuthName, to_number, msg)
 
 
 # TESTING ENDPOINTS ----------------------------------

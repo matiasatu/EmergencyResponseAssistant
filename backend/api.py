@@ -52,8 +52,8 @@ def emergency():
     users = get_users()
     for u in users:
         report = generate_report(u["location"], u["bio"])
-        report = report.replace('\n', '')
         print(report)
+        report = report.replace('\n', '')
         reportDict = json.loads(report)
 
         if reportDict["concern"]:
@@ -397,7 +397,7 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
 
     USER INFO: {user_info}
 
-    write things ike how to plan escape routes, where to hide for safety, how to make makeshift items to help, etc. Be generous with how much info you tell them. Don't keep these tips short. Make them at least a paragraph each and add examples. 
+    write things like how to plan escape routes, where to hide for safety, how to make makeshift items to help, etc. Be generous with how much info you tell them. Don't keep these tips short. Make them at least a paragraph each and add examples. 
     Seperate each tip with a new line. Remember each category should be at least 10 sentences long. For example, don't say "plan an evacuation route", make it detailed about how you make a good evacuation plan. 
     This should be multiple paragraphs long. Remember to take into account the specific information about the user and factor that into your reponse and tips. 
     
@@ -410,10 +410,11 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     At the top of the extended information, have an emergency overview section. This will be formatted like this: a list of relevent dangerous to the user emergencies, with their status next to them, seperated by a new line. If status is unknown assume active status.Also include rational about how your location and its location is close enough to worry about
     Ensure each category has at least 10 sentences in it.
     be very strict about this formatting, have nothing else in your response besides this json object.title each paragraph with  **title**, and backslash n before and after it. remember to close the bracket.
-    make extra sure all newlines aren't actually new lines, and instead are backslash n. Don't have any backslashes by themselves.
-
+    make sure you use quotes around the values of the json objecy and have a closing bracket at the end of the object
+    have a 500 word limit
     """
-
+    #make extra sure all newlines aren't actually new lines, and instead are backslash n. Don't have any backslashes by themselves.
+    
     data = {
         "model": "llama-3.3-70b-versatile",
         "messages": [
@@ -430,11 +431,11 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
         response.raise_for_status()
         print("here is the result:")
         result = response.json()
-        print(result)
+        # print(result)
         if 'choices' in result and len(result['choices']) > 0:
             analysis = result['choices'][0]['message']['content']
 
-            print(analysis)
+            # print(analysis)
             return analysis
         else:
             return f"Error: Unable to get a proper response from Groq API. Response: {result}"

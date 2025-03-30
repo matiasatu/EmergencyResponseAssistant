@@ -40,7 +40,7 @@
   // Function to format text with bold and newlines
   function formatText(text) {
     // Replace **text** with <strong>text</strong>
-    const boldFormatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const boldFormatted = text.replace(/\*\*(.*?)\*\*/g, '\n<strong>$1</strong>\n');
     
     // Replace \n with <br />
     return boldFormatted.replace(/\n/g, '<br />');

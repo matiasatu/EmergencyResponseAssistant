@@ -324,31 +324,32 @@ def get_emergency_information() -> List[Dict[str, Any]]:
     #         all_emergencies.append(event)
     
     # # API 3: National Weather Service Alerts
-    # weather_url = "https://api.weather.gov/alerts/active"
-    # headers = {"Accept": "application/geo+json"}
-    # weather_data = safe_api_request(weather_url, headers)
+    weather_url = "https://api.weather.gov/alerts/active"
+    headers = {"Accept": "application/geo+json"}
+    weather_data = safe_api_request(weather_url, headers)
     
-    # if weather_data and 'features' in weather_data:
-    #     for alert in weather_data['features'][:10]:  # Limit to 10 recent alerts
-    #         props = alert.get('properties', {})
+    if weather_data and 'features' in weather_data:
+        for alert in weather_data['features'][:10]:  # Limit to 10 recent alerts
+            props = alert.get('properties', {})
             
-    #         event = {
-    #             'source': 'National Weather Service',
-    #             'type': props.get('event', 'Weather alert'),
-    #             'title': props.get('headline', props.get('event', 'Weather alert')),
-    #             'location': props.get('areaDesc', 'Unknown area'),
-    #             'date': props.get('sent', 'Unknown date'),
-    #             'status': props.get('status', 'Unknown status'),
-    #             'severity': props.get('severity', 'Unknown severity'),
-    #             'id': props.get('id', 'Unknown ID'),
-    #             'summary': props.get('description', 'No description available')[:200] + '...' if props.get('description') and len(props.get('description')) > 200 else props.get('description', 'No description available'),
-    #             'instruction': props.get('instruction', 'No instructions provided')
-    #         }
-    #         all_emergencies.append(event)
+            event = {
+                'source': 'National Weather Service',
+                'type': props.get('event', 'Weather alert'),
+                'title': props.get('headline', props.get('event', 'Weather alert')),
+                'location': props.get('areaDesc', 'Unknown area'),
+                'date': props.get('sent', 'Unknown date'),
+                'status': props.get('status', 'Unknown status'),
+                'severity': props.get('severity', 'Unknown severity'),
+                'id': props.get('id', 'Unknown ID'),
+                'summary': props.get('description', 'No description available')[:200] + '...' if props.get('description') and len(props.get('description')) > 200 else props.get('description', 'No description available'),
+                'instruction': props.get('instruction', 'No instructions provided')
+            }
+            all_emergencies.append(event)
     
     # Sort all emergencies by date (most recent first)
     try:
         all_emergencies.sort(key=lambda x: x.get('date', ''), reverse=True)
+        print(all_emergencies)
     except Exception as e:
         print(f"Error sorting emergencies by date: {str(e)}")
     

@@ -4,6 +4,8 @@
 
     let user = login.get_user();
     let summaries: string[] = [];
+    let isLoading = true;
+
 
     async function fetchSummaries(username: string): Promise<string[]> {
         try {
@@ -23,7 +25,8 @@
 
     onMount(async () => {
         if (user) {
-        summaries = await fetchSummaries(user);
+            summaries = await fetchSummaries(user);
+            isLoading = false;
         }
     });
 
@@ -36,18 +39,30 @@
   }
 </script>
   
-<div>
-    {#if user && summaries.length}
-        <ul>
-        {#each summaries as summary, i}
-            <details>
-                <summary>Summary #{i + 1}</summary>
-                <p>{summary}</p>
-            </details>
-        {/each}
-        </ul>
+<main class="max-w-3xl mx-auto p-8">
+    {#if user}
+        <h1 class="text-2xl font-bold text-gray-800 mb-8 pb-2 border-b border-gray-200">
+            Disaster history
+            <span class="brand-text">for {user}</span>
+        </h1>
+        {#if isLoading}
+            <h1 class="text-xl font-bold text-gray-800">Loading...</h1>
+        {/if}
+
+        {#if summaries.length}
+            <ul>
+            {#each summaries as summary, i}
+                <details>
+                    <summary>Summary #{i + 1}</summary>
+                    <p class="text-gray-800">{@html formatText(summary)}</p>
+                </details>
+            {/each}
+            </ul>
+        {:else}
+            <p>Loading summaries...</p>
+        {/if}
     {:else}
-        <p>Loading summaries...</p>
+        <h1 class="text-2xl font-bold text-gray-800 mb-8 pb-2 border-b border-gray-200">You are not signed in.</h1>
     {/if}
-</div>
+</main>
   

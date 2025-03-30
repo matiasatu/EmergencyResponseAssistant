@@ -11,9 +11,10 @@
   async function fetchSummary() {
     isLoading = true;
     hasError = false;
-
+    
     try {
-      const response = await fetch('/api/summary/matias');
+      const str = '/api/summary/' + user
+      const response = await fetch(str);
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);

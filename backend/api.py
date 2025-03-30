@@ -62,12 +62,12 @@ def emergency():
 
             cur.execute("SELECT * FROM summary WHERE username=?", [u["username"]])
 
-            if cur.fetchall():
-                cur.execute("UPDATE summary SET summary=? WHERE username=?", [reportDict["extended_info"], u["username"]])
-                con.commit()
-            else:
-                cur.execute("INSERT INTO summary VALUES(?,?)", [u["username"], reportDict["extended_info"]])
-                con.commit()
+            # if cur.fetchall():
+            #     cur.execute("UPDATE summary SET summary=? WHERE username=?", [reportDict["extended_info"], u["username"]])
+            #     con.commit()
+            # else:
+            cur.execute("INSERT INTO summary VALUES(?,?)", [u["username"], reportDict["extended_info"]])
+            con.commit()
 
 @app.get("/summary/{username}")
 def get_summary(username: str):
@@ -433,7 +433,8 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
         # print(result)
         if 'choices' in result and len(result['choices']) > 0:
             analysis = result['choices'][0]['message']['content']
-            # print(analysis)
+
+            print(analysis)
             return analysis
         else:
             return f"Error: Unable to get a proper response from Groq API. Response: {result}"

@@ -6,12 +6,14 @@
     import { Navbar } from 'flowbite-svelte';
     
     let user = login.get_user()
+
     $: currentPath = $page.url.pathname;
     $: hideFooter = currentPath === '/';
 
     function handleLogout() {
         login.logout()
     }
+
   </script>
   
   <div class="flex flex-col min-h-screen">
@@ -34,11 +36,12 @@
             <li class="list-none">
               <a href="/past-disasters" class="text-xl text-gray-600 hover:text-orange-500">Past Disasters</a>
             </li>
-            {#if !user}
+            <li class="list-none">
                 <a href="/login" class="text-xl text-gray-600 hover:text-orange-500">Login</a>
-            {:else}
+            </li>
+            <!-- <li class="list-none">
                 <a href="#" on:click|preventDefault={handleLogout} class="text-xl text-gray-600 hover:text-orange-500">Logout</a>
-            {/if}
+            </li> -->
           </div>
         </Navbar>
       </header>

@@ -364,7 +364,7 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
         emergency_descriptions.append(description)
     
     formatted_emergencies = "\n".join(emergency_descriptions)
-    print(formatted_emergencies)
+    # print(formatted_emergencies)
     # Send to Groq API
 
     config = configparser.ConfigParser()
@@ -381,9 +381,10 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
 
     prompt = f"""
     Based on the following recent emergency events, analyze if my location "{my_location}" might be affected by any of them.
-    Consider distance, type of emergency, and other relevant factors. If there are any precautions the person should take, include those.
+    Consider distance, type of emergency, and other relevant factors. If the emergencies are not nearby just return false like described below. If there are any precautions the person should take, include those.
     Treat all events as if they are happening right now. If there are historical FEMA events, treat them like they are currently ongoing. Be generous with declarcing emergencies.
-    If there is one happening nearby, even if status is unknown, assume the worst as to be safe is better than to be sorry.
+    If there is one happening nearby, even if status is unknown, assume the worst as to be safe is better than to be sorry. By nearby I mean extremely nearby. Like within 50 miles.
+    If it is more than 50 miles do not declare it an emergency under any circumstances.
     
     EMERGENCY EVENTS:
     {formatted_emergencies}
@@ -393,23 +394,24 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     USER INFO: {user_info}
 
     write things ike how to plan escape routes, where to hide for safety, how to make makeshift items to help, etc. Be generous with how much info you tell them. Don't keep these tips short. Make them at least a paragraph each and add examples. 
-    Seperate each tip with a new line. Remember each tip should be at least 5 sentences long. For example, don't say "plan an evacuation route", make it detailed about how you make a good evacuation plan.
-    This should be multiple paragraphs long. Remember to take into account the specific information about the user and factor that into your reponse and tips.
+    Seperate each tip with a new line. Remember each category should be at least 10 sentences long. For example, don't say "plan an evacuation route", make it detailed about how you make a good evacuation plan. 
+    This should be multiple paragraphs long. Remember to take into account the specific information about the user and factor that into your reponse and tips. 
     
-    Format your response as a JSON object. like the following:
+    Format your response as a valid JSON object this means you cannot write new lines, instead of new lines you must use backslash n. like the following:
 
     concern: true or false value based on whether there are any emergencies to be worried about
     emergencies: a list of relevent emergencies to be worried about, their name and location listed
-    summary: a short blurb about what's happening and what to know immidiately. this should only be a few words. Example : "WARNING! WILDFIRES NEARBY. CHECK WEBSITE FOR MORE INFO". Alaways have the check website for mroe info part there
-    extended_info: the large amount of information the user should know described in other places in this prompt, formatted as a simple string
-    
-    be very strict about this formatting, have nothing else in your response besides this json object. have no new lines in your response except in the . remember to close the bracket.
-
+    summary: a short blurb about what's happening and what to know immidiately. this should only be a few words. Example : "WARNING! WILDFIRES NEARBY. VIEW THIS FOR MORE INFO". Alaways have VIEW THIS FOR MORE INFO part there.
+    extended_info: the large amount of information the user should know described in other places in this prompt, formatted as a simple string.
+    At the top of the extended information, have an emergency overview section. This will be formatted like this: a list of relevent dangerous to the user emergencies, with their status next to them, seperated by a new line. If status is unknown assume active status.Also include rational about how your location and its location is close enough to worry about
+    Ensure each category has at least 10 sentences in it.
+    be very strict about this formatting, have nothing else in your response besides this json object.title each paragraph with  **title**, and backslash n before and after it. remember to close the bracket.
+    make extra sure all newlines aren't actually new lines, and instead are backslask n
 
     """
 
     data = {
-        "model": "llama3-70b-8192",
+        "model": "llama-3.3-70b-versatile",
         "messages": [
             {"role": "system", "content": "You are an emergency analysis assistant. Provide factual, helpful information about whether emergency events might impact a specific location."},
             {"role": "user", "content": prompt}

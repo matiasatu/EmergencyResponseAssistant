@@ -84,7 +84,7 @@ def emergency():
 def get_summary(username: str):
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM summary WHERE username=?", [username])
+    cur.execute("SELECT * FROM summary WHERE username=? ORDER BY id DESC LIMIT 1", [username])
 
     row = cur.fetchone()
     summary = ""
@@ -95,6 +95,20 @@ def get_summary(username: str):
         "summary": summary
     }
     return JSONResponse(json.dumps(r))
+
+
+@app.get("/history/{username}")
+def get_past_disasters(username: str):
+    cur = con.cursor()
+    cur.execute("SELECT * FROM summary WHERE username=? ORDER BY id DESC LIMIT 1", [username])
+    rows = cur.fetchall()
+
+    summaries = []
+    for row in rows:
+        _, summary = row
+        summaries.append(summary)
+
+    return JSONResponse(content={"summaries": summaries})
 
 @app.get("/user/{username}")
 def get_user(username: str):

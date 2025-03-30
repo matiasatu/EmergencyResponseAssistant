@@ -52,10 +52,12 @@
         {#if summaries.length}
             <ul>
             {#each summaries as summary, i}
-                <details>
-                    <summary>Summary #{i + 1}</summary>
-                    <p class="text-gray-800">{@html formatText(summary)}</p>
-                </details>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm mb-4">
+                    <details>
+                        <summary>Summary #{i + 1}</summary>
+                        <p class="text-gray-800">{@html formatText(summary)}</p>
+                    </details>
+                </div>
             {/each}
             </ul>
         {:else}

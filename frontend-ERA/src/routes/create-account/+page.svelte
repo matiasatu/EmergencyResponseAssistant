@@ -1,5 +1,6 @@
 <script>
     import { goto } from "$app/navigation";
+    import * as login from "../../lib/login"
 
 
   let bio = '';
@@ -170,6 +171,7 @@
         
         formSuccess = true;
         clearInterval(feedbackInterval)
+        login.change_user(username)
 
         setTimeout(() => {
           username = '';

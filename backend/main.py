@@ -110,6 +110,7 @@ def get_past_disasters(username: str):
 
     return JSONResponse(content={"summaries": summaries})
 
+
 @app.get("/user/{username}")
 def get_user(username: str):
     cur = con.cursor()

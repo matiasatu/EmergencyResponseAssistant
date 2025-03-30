@@ -25,8 +25,9 @@
 
     onMount(async () => {
         if (user) {
-            summaries = await fetchSummaries(user);
-            isLoading = false;
+            summaries = await fetchSummaries(user)
+            console.log(summaries)
+            isLoading = false
         }
     });
 

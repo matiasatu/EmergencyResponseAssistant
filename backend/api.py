@@ -55,7 +55,8 @@ def emergency():
     users = get_users()
     for u in users:
         report = generate_report(u["location"], u["bio"])
-        report = report.replace('\n', '')
+        report = report #.replace('\n', '')
+        print(report)
         reportDict = json.loads(report)
 
         if reportDict["concern"]:
@@ -116,66 +117,97 @@ def feedback(msg: Message):
     prompt = f"""
     Using the following description give me any feedback on the description and any improvements I could make. 
     Consider medical conditions, disabilities, other people or pets in the users home they may need to take care of, unique details about the users transportation situation and anything else you think would be relevant.
-    Campare your feedback to the last feedback you gave to me. If you give redundant feedback it will waste the users time so please do not.
-    I do not care what the user inputs only what you feedback is. I.e. if the user gives you a completely new description but your feedback would not be more than 50% different then you should set the "different" .
-    if you just change one or two things in your feedback it is not enough to justify a whole new response 
+    make your response sentences concise and constructive for example "consider adding X"
+    You should focus on the charictaristics of the users situation not the things they should do
+    focus your response around additional categories of data the user could add rather than the ways they could improve the ones they ahve added
+    for example telling the user that they need to give more information about X is useless but telling them that they did not mention anything in a given category is useful
+    aim for simplicity in your response
+    do not use complicated sentences
+    DO NOT USE COMPLICATED SENTENCES
+    A COMPLICATED SENTENCE IS ONE WITH MULTIPLE CLAUSES
+    YOU ARE GIVING ME COMPLICATED SENTENCES
     DESCRIPTION:
     {msg.msg}
     YOUR OUTPUT:
-    Your ouput should be a valid json object containing the following keys "different" and "feedback" and "last" "explanation"
-    "different" should be a boolean that is true if your feedback is more than 50% different than the last feedback you gave.
-    Make sure to think hard about the differneces between your current response and your last response.
-    Only take into account your feedback 
-    "feedback" is 1 or 2 sentences of feedback on how the user could improve their description if "different" is true. "feedback" should be "none" if "different" is false.
-    Your only output should be this json object
-    "last" should be the last response you gave
-    "explanation" is a thorough explanation of the differences between your last response and your current response
+    a 1 or 2 sentences of feedback on how the user could improve their description.
+    make sure that this feedback encompasses every issue you see with the users output.
+    just output these sentences, no label or anything
     """
 
     if row is not None:
-        m = row[1]
+        output = row[1]
+        input = row[2]
     else:
-        m = "None"
+        output = "None"
+        input = "None"
 
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
-    print(m)
-    data = {
+    feedbackMsg = {
         "model": "llama3-70b-8192",
         "messages": [
             {"role": "system", "content": 
              "You are helping people write descriptions containting information about their unique needs in an natural disaster or emergency situation.\
-              Provide guidance on sections of their description that need more information or sections that could be added to improve their description"},
-            {"role": "user", "content": f"The last feedback you gave was {m}"},
+              Provide guidance on sections of their description that need more information or sections that could be added to improve their description\
+              This description is coming to you as a stream so each subsequent input will contain the last with the users changes"},
+            {"role": "user", "content": f"The last input you were given was {input} and the last response you gave was {output}"},
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.3  # Lower temperature for more factual responses
     }
 
     try:
-        response = requests.post(API_URL, headers=headers, json=data)
+        response = requests.post(API_URL, headers=headers, json=feedbackMsg)
         response.raise_for_status()
         
         result = response.json()
         if 'choices' in result and len(result['choices']) > 0:
             feedback = result['choices'][0]['message']['content']
 
-            feedbackDict = json.loads(feedback)
+            differentMsg = {
+                "model": "llama3-70b-8192",
+                "messages": [
+                    {"role": "system", "content": 
+                    "You are tasked with analyzing two responses to see if they are significantly different"},
+                    {"role": "user", "content": 
+                    f"""
+                    Here are the two responses. a difference of a few words is not enough to consider them different. tell me if the content is different Do not let us down
+                    RESPONSE 1:
+                    {output}
+                    RESPONSE 2:
+                    {feedback}
+                    YOUR OUTPUT:
+                    your output should be a single character 'Y' if the responses contain different content. 'N' otherwise
+                    DO NOT OUTPUT MORE THAN A SINGLE CHARACTER
+                    """}
+                ],
+                "temperature": 0.3  # Lower temperature for more factual responses
+            }
 
-            if feedbackDict["different"]:
+            response = requests.post(API_URL, headers=headers, json=differentMsg)
+            response.raise_for_status()
+            result = response.json()
+            different = result['choices'][0]['message']['content']
+
+
+            if different == 'Y':
                 cur = con.cursor()
                 cur.execute("SELECT * FROM messages WHERE username=?", [msg.username])
 
                 if cur.fetchall():
-                    cur.execute("UPDATE messages SET output=? WHERE username=?", [feedbackDict["feedback"], msg.username])
+                    cur.execute("UPDATE messages SET output=?, input=? WHERE username=?", [feedback, input, msg.username])
                     con.commit()
                 else:
-                    cur.execute("INSERT INTO messages VALUES(?,?)", [msg.username, feedbackDict["feedback"]])
+                    cur.execute("INSERT INTO messages VALUES(?,?,?)", [msg.username, feedback, msg.msg])
                     con.commit()
 
-            print(feedback)
+            r = {
+                "new_response": different == 'Y',
+                "response": feedback
+            }
+            return JSONResponse(json.dumps(r))
             # return analysis
         else:
             return f"Error: Unable to get a proper response from Groq API. Response: {result}"

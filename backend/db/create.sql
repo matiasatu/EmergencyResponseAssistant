@@ -17,5 +17,4 @@ CREATE TABLE IF NOT EXISTS messages (
     username TEXT,
     output TEXT NOT NULL,
     input TEXT NOT NULL,
-    FOREIGN KEY (username) REFERENCES user(username)
 );

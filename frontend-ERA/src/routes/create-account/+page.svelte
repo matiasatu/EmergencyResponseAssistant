@@ -1,23 +1,31 @@
 <script>
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import { slide } from 'svelte/transition';
+    import { on } from 'svelte/events';
+
+  let bio = '';
+  let showFeedback = false;
 
   // Form data
   let username = '';
   let email = '';
   let phoneNumber = '';
   let location = '';
-  let bio = '';
-  
+  let onInitialForm = true;
   // Form state
   let usernameError = '';
   let emailError = '';
   let phoneNumberError = '';
   let bioError = '';
   let formSubmitted = false;
+  let nextBtnClicked = false;
   let formSuccess = false;
   let isLoading = false;
   let serverError = '';
+  let bioFeedback = "No feedback at the moment.";
+  let feedbackInterval;
+  let intervalStarted = false;
 
   const API_URL = 'http://localhost:8000/create-account';
 
@@ -71,6 +79,57 @@
     return true;
   }
 
+  async function getGroqFeedback(bio) {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/live-feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ bio }), 
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Request failed: ${error}`);
+      }
+
+      let data = await response.json();
+      data = JSON.parse(data);
+      bioFeedback = data.feedback
+      return;
+
+    } catch (error) {
+      bioFeedback = "No feedback at the moment."
+      console.error('Error fetching Groq feedback:', error);
+    }
+  }
+
+  // Start interval when input is first detected:
+  function handleBioInput() {
+    if (!intervalStarted) {
+      intervalStarted = true;
+      
+      // Immediately get feedback first:
+      getGroqFeedback(bio);
+
+      feedbackInterval = setInterval(() => {
+        getGroqFeedback(bio);
+      }, 5000);
+    }
+  }
+
+  function handleNext() {
+    nextBtnClicked = true;
+    const isUsernameValid = validateUsername();
+    const isEmailValid = validateEmail();
+    const isPhoneNumberValid = validatePhoneNumber();
+
+    if (isUsernameValid && isEmailValid && isPhoneNumberValid) {
+      onInitialForm = false;
+    }
+  
+  }
   async function handleSubmit() {
     formSubmitted = true;
     serverError = '';
@@ -142,8 +201,13 @@
   }
 </script>
 
-<main class="w-full flex justify-center items-center min-h-screen bg-gray-100 p-6">
-  <div class="bg-white shadow-lg rounded-lg p-6 max-w-lg w-full">
+<main class="relative w-full flex flex-row justify-center min-h-[678px] items-stretch bg-gray-100 p-6">
+  <!-- form div -->
+  <div 
+  class="absolute bg-white z-5 top-[75px] shadow-lg rounded-lg p-6 max-w-lg w-full h-[500px] transition-transform duration-1000"
+  class:translate-x-0={onInitialForm}
+  class:-translate-x-[50%]={!onInitialForm}
+  >
     <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Create Your Profile</h1>
     
     {#if formSuccess}
@@ -152,6 +216,7 @@
       </div>
     {:else}
       <form on:submit|preventDefault={handleSubmit} class="space-y-4">
+        {#if onInitialForm}
         <div>
           <label for="username" class="block text-gray-600 font-medium">Username <span class="text-red-500">*</span></label>
           <input 
@@ -161,7 +226,7 @@
             class="w-full p-2 border rounded focus:ring focus:ring-blue-300 {formSubmitted && usernameError ? 'border-red-500' : 'border-gray-300'}" 
             on:blur={validateUsername}
           />
-          {#if formSubmitted && usernameError}
+          {#if nextBtnClicked && usernameError}
             <p class="text-red-500 text-sm mt-1">{usernameError}</p>
           {/if}
         </div>
@@ -175,7 +240,7 @@
             class="w-full p-2 border rounded focus:ring focus:ring-blue-300 {formSubmitted && emailError ? 'border-red-500' : 'border-gray-300'}" 
             on:blur={validateEmail}
           />
-          {#if formSubmitted && emailError}
+          {#if nextBtnClicked && emailError}
             <p class="text-red-500 text-sm mt-1">{emailError}</p>
           {/if}
         </div>
@@ -191,7 +256,7 @@
             on:blur={validatePhoneNumber}
             placeholder="123-456-7890"
           />
-          {#if formSubmitted && phoneNumberError}
+          {#if nextBtnClicked && phoneNumberError}
             <p class="text-red-500 text-sm mt-1">{phoneNumberError}</p>
           {/if}
         </div>
@@ -206,24 +271,28 @@
             placeholder="Enter your city or region"
           />
         </div>
-        
-        <div>
-          <label for="bio" class="block text-gray-600 font-medium">Bio <span class="text-red-500">*</span></label>
-          <textarea 
-            id="bio" 
-            bind:value={bio} 
-            class="w-full p-2 border rounded focus:ring focus:ring-blue-300 {formSubmitted && bioError ? 'border-red-500' : 'border-gray-300'}" 
-            on:blur={validateBio}
-            rows="4"
-            placeholder="Tell us about yourself..."
-          ></textarea>
-          {#if formSubmitted && bioError}
-            <p class="text-red-500 text-sm mt-1">{bioError}</p>
-          {/if}
-          <div class="text-sm text-gray-500 mt-1">
-            {bio.length} characters
+        {/if}
+
+        {#if !onInitialForm}
+          <div>
+            <label for="bio" class="block text-gray-600 font-medium">Bio <span class="text-red-500">*</span></label>
+            <textarea 
+              id="bio" 
+              bind:value={bio} 
+              on:input={handleBioInput}
+              class="w-full p-2 border h-[300px;] rounded focus:ring focus:ring-blue-300 {formSubmitted && bioError ? 'border-red-500' : 'border-gray-300'}" 
+              on:blur={validateBio}
+              rows="4"
+              placeholder="Tell us about yourself..."
+            ></textarea>
+            {#if formSubmitted && bioError}
+              <p class="text-red-500 text-sm mt-1">{bioError}</p>
+            {/if}
+            <div class="text-sm text-gray-500 mt-1">
+              {bio.length} characters
+            </div>
           </div>
-        </div>
+        {/if}
         
         {#if serverError}
           <div class="bg-red-100 text-red-700 p-4 rounded mb-4 text-center">
@@ -231,14 +300,36 @@
           </div>
         {/if}
         
-        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:bg-gray-400" disabled={isLoading}>
-          {#if isLoading}
-            Creating Profile...
-          {:else}
-            Create Profile
-          {/if}
-        </button>
+        {#if !onInitialForm}
+          <button type="submit" class="w-full brand-bg text-white py-2 rounded hover:bg-blue-700 transition disabled:bg-gray-400" disabled={isLoading}>
+            {#if isLoading}
+              Creating Profile...
+            {:else}
+              Create Profile
+            {/if}
+          </button>
+        {:else if onInitialForm}
+          <button type="button" on:click={handleNext} class="w-full brand-bg text-white py-2 rounded hover:bg-blue-700 transition disabled:bg-gray-400" disabled={isLoading}>
+            Next
+          </button>
+        {/if}
       </form>
     {/if}
   </div>
+  <!-- Feedback div -->
+  <div 
+  class="absolute brand-secondary-bg z-0 top-[75px] h-[500px] flex flex-col shadow-lg rounded-lg p-4 max-w-lg w-full items-stretch gap-2 transition-transform duration-1000"
+  class:translate-x-0={onInitialForm}
+  class:translate-x-[50%]={!onInitialForm}
+  class:opacity-0={onInitialForm}
+  class:opacity-100={!onInitialForm}
+>
+  <h1 class="text-3xl text-white font-bold"> Consider adding.... </h1>  
+  <div class="bg-white shadow-base rounded-lg p-4 max-w-lg flex-1 w-full items-stretch">
+    <p>
+      {bioFeedback}
+    </p>
+  </div>
+</div>
 </main>
+

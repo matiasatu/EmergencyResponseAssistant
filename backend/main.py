@@ -77,7 +77,7 @@ def emergency():
             #     cur.execute("UPDATE summary SET summary=? WHERE username=?", [reportDict["extended_info"], u["username"]])
             #     con.commit()
             # else:
-            cur.execute("INSERT INTO summary VALUES(?,?)", [u["username"], reportDict["extended_info"]])
+            cur.execute("INSERT INTO summary (username, summary) VALUES (?, ?)", [u["username"], reportDict["extended_info"]])
             con.commit()
 
 @app.get("/summary/{username}")

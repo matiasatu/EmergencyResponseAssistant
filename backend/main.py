@@ -523,6 +523,21 @@ def send_text(number: int, msg: str, username: str):
 
         server.sendmail(googleAuthName, to_number, msg + f"\nhttp://10.60.25.182:8001/login/{username}")
 
+    cur = con.cursor()
+    cur.execute("SELECT * FROM user WHERE username=?", [username])
+
+    row = cur.fetchone()
+
+    email = row[3]
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(googleAuthName, googleAuthPass)
+
+    server.sendmail(googleAuthName, email, msg + f"\nhttp://10.60.25.182:8001/login/{username}")
+
+    
+
+
 
 # TESTING ENDPOINTS ----------------------------------
 

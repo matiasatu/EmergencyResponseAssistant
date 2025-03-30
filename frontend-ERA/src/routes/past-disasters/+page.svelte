@@ -62,7 +62,7 @@
             {/each}
             </ul>
         {:else}
-            <p>Loading summaries...</p>
+            <p>No summaries available.</p>
         {/if}
     {:else}
         <h1 class="text-2xl font-bold text-gray-800 mb-8 pb-2 border-b border-gray-200">You are not signed in.</h1>

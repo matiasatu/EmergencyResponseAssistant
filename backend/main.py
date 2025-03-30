@@ -89,7 +89,7 @@ def get_summary(username: str):
     row = cur.fetchone()
     summary = ""
     if row is not None:
-        _, summary = row
+        _, _, summary = row
 
     r = {
         "summary": summary
@@ -105,7 +105,7 @@ def get_past_disasters(username: str):
 
     summaries = []
     for row in rows:
-        _, summary = row
+        _, _, summary = row
         summaries.append(summary)
 
     return JSONResponse(content={"summaries": summaries})

@@ -134,12 +134,9 @@
     formSubmitted = true;
     serverError = '';
     
-    const isUsernameValid = validateUsername();
-    const isEmailValid = validateEmail();
-    const isPhoneNumberValid = validatePhoneNumber();
     const isBioValid = validateBio();
     
-    if (isUsernameValid && isEmailValid && isPhoneNumberValid && isBioValid) {
+    if (isBioValid) {
       isLoading = true;
       
       try {

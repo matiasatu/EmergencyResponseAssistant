@@ -51,7 +51,7 @@
       on:click={signUp} 
       on:mouseenter={() => signUpImg = 'person_add_white.png'}
       on:mouseleave={() => signUpImg = 'person_add_orange.png'}
-      class="landing-btn flex justify-center items-center gap-2 bg-white h-20 px-5 py-2 rounded-full shadow-md transition">
+      class="landing-btn flex w-[200px] justify-center items-center gap-2 bg-white h-20 px-5 py-2 rounded-full shadow-md transition">
       <img class="w-[30px] h-[30px]" alt="disaster icon" src={signUpImg}>
       Sign Up
     </button>
@@ -60,7 +60,7 @@
       on:click={currentDisaster}
       on:mouseenter={() => currDisasterImg = 'disaster_white.png'}
       on:mouseleave={() => currDisasterImg = 'disaster_orange.png'}
-      class="landing-btn flex justify-center items-center gap-2 bg-white h-20 px-5 py-2 rounded-full shadow-md transition">
+      class="landing-btn flex w-[200px] justify-center items-center gap-2 bg-white h-20 px-5 py-2 rounded-full shadow-md transition">
       <img class="w-[30px] h-[30px]" alt="disaster icon" src={currDisasterImg}>
       Current Disasters
     </button>
@@ -69,7 +69,7 @@
       on:click={pastDisasters}
       on:mouseenter={() => pastDisastersImg = 'history_white.png'}
       on:mouseleave={() => pastDisastersImg = 'history_orange.png'}
-      class="landing-btn flex justify-center items-center gap-2 bg-white h-20 px-5 py-2 rounded-full shadow-md transition">
+      class="landing-btn flex w-[200px] justify-center items-center gap-2 bg-white h-20 px-5 py-2 rounded-full shadow-md transition">
       <img class="w-[30px] h-[30px]" alt="disaster icon" src={pastDisastersImg}>
       Past Disasters
     </button>

@@ -318,13 +318,13 @@
   </div>
   <!-- Feedback div -->
   <div 
-  class="absolute z-0 top-[75px] h-[500px] brand-div flex flex-col shadow-lg rounded-lg p-4 max-w-lg w-full items-stretch gap-2 transition-transform duration-1000"
+  class="absolute brand-secondary-bg z-0 top-[75px] h-[500px] flex flex-col shadow-lg rounded-lg p-4 max-w-lg w-full items-stretch gap-2 transition-transform duration-1000"
   class:translate-x-0={onInitialForm}
   class:translate-x-[50%]={!onInitialForm}
   class:opacity-0={onInitialForm}
   class:opacity-100={!onInitialForm}
 >
-  <h1 class="text-3xl brand-text font-bold"> Consider adding.... </h1>  
+  <h1 class="text-3xl text-white font-bold"> Consider adding.... </h1>  
   <div class="bg-white shadow-base rounded-lg p-4 max-w-lg flex-1 w-full items-stretch">
     <p>
       {bioFeedback}

@@ -169,7 +169,7 @@
         
         formSuccess = true;
         clearInterval(feedbackInterval)
-        
+
         setTimeout(() => {
           username = '';
           email = '';
@@ -209,7 +209,7 @@
 <main class="relative w-full flex flex-row justify-center min-h-[678px] items-stretch bg-gray-100 p-6">
   <!-- form div -->
   <div 
-  class="absolute bg-white z-5 top-[75px] shadow-lg rounded-lg p-6 max-w-lg w-full h-[500px] transition-transform duration-1000"
+  class="absolute bg-white z-5 top-[60px] shadow-lg rounded-lg p-6 max-w-lg w-full h-[550px] transition-transform duration-1000"
   class:translate-x-0={onInitialForm}
   class:-translate-x-[50%]={!onInitialForm}
   >
@@ -319,11 +319,16 @@
           </button>
         {/if}
       </form>
+      <div class="pt-2">
+        <p>Already have an account? <a class="brand-text" href="/login">Login</a></p>
+      </div>
     {/if}
+
   </div>
+
   <!-- Feedback div -->
   <div 
-  class="absolute brand-secondary-bg z-0 top-[75px] h-[500px] flex flex-col shadow-lg rounded-lg p-4 max-w-lg w-full items-stretch gap-2 transition-transform duration-1000"
+  class="absolute brand-secondary-bg z-0 top-[60px] h-[550px] flex flex-col shadow-lg rounded-lg p-4 max-w-lg w-full items-stretch gap-2 transition-transform duration-1000"
   class:translate-x-0={onInitialForm}
   class:translate-x-[50%]={!onInitialForm}
   class:opacity-0={onInitialForm}

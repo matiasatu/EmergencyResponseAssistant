@@ -9,29 +9,50 @@
     let usernameError = ""
     let serverError = ""
 
+    function validateUsername() {
+        if (!username) {
+        usernameError = 'Username is required';
+        return false;
+        } else if (username.length < 3) {
+        usernameError = 'Username must be at least 3 characters';
+        return false;
+        }
+        usernameError = '';
+        return true;
+    }
+
     async function handleSubmit() {
+        const isUsernameValid = validateUsername();
         formSubmitted = true
         serverError = ''
         isLoading = true
 
-        let result = await login.change_user(username)
-        if (result = false) {
-            usernameError = "User not found."
-        } else {
-            formSuccess = true
+        if (isUsernameValid) {
+            let result = await login.change_user(username)
+            if (result == false) {
+                usernameError = "User not found."
+                formSuccess = false
+                isLoading = false
+            } else {
+                formSuccess = true
+                isLoading = false
+            }
         }
+
 
     }
 </script>
 
 <main class="w-full flex flex-row justify-center h-screen bg-gray-100 p-6">
-    {#if formSuccess} 
-        <div class="bg-green-100 text-green-700 p-4 rounded mb-4 text-center">
-            <p>Signed in successfully!</p>
-        </div>
-    {:else}
+
+    
         <div class="absolute bg-white shadow-lg rounded-lg p-6 max-w-lg w-full min-h-[300px] flex flex-col justify-center">
             <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Login</h1>
+            {#if formSuccess} 
+            <div class="bg-green-100 text-green-700 p-4 rounded mb-4 text-center">
+                <p>Signed in successfully!</p>
+            </div>
+            {:else}
             <form on:submit|preventDefault={handleSubmit} class="space-y-4">
                 <div>
                     <label for="username" class="block text-gray-600 font-medium">Username <span class="text-red-500">*</span></label>
@@ -55,6 +76,11 @@
                 </button>
 
             </form>
+            <div class="pt-2">
+                <p>Don't have an account? <a class="brand-text" href="/create-account">Sign Up</a></p>
+            </div>
+            {/if}
+
         </div>
-    {/if}
+    
 </main>

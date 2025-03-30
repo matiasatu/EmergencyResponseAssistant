@@ -29,7 +29,7 @@
               <a href="/past-disasters" class="text-xl text-gray-600 hover:text-orange-500">Past Disasters</a>
             </li>
             <li class="list-none">
-              <a href="/create-account" class="text-xl text-gray-600 hover:text-orange-500">Login</a>
+              <a href="/login" class="text-xl text-gray-600 hover:text-orange-500">Login</a>
             </li>
           </div>
         </Navbar>

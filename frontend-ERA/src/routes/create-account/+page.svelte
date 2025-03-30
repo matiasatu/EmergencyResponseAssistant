@@ -96,7 +96,7 @@
       data = JSON.parse(data)
       console.log("called groq")
       if(data.new_response){
-        bioFeedback = data.response
+        bioFeedback = data.response.replace(/-/g, '\n-');
       }
       return;
 

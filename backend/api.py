@@ -430,7 +430,7 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
         response.raise_for_status()
         print("here is the result:")
         result = response.json()
-        # print(result)
+        print(result)
         if 'choices' in result and len(result['choices']) > 0:
             analysis = result['choices'][0]['message']['content']
 

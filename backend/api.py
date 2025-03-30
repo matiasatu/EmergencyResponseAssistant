@@ -130,9 +130,8 @@ def feedback(msg: Message):
     DESCRIPTION:
     {msg.msg}
     YOUR OUTPUT:
-    a 1 or 2 sentences of feedback on how the user could improve their description.
-    make sure that this feedback encompasses every issue you see with the users output.
-    just output these sentences, no label or anything
+    bullet points of categories that could be added or updated
+    give me at most 3 bullet points and do not be afraid to repond with 
     """
 
     if row is not None:

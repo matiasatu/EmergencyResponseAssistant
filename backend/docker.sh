@@ -1,3 +1,7 @@
 docker stop backend && docker rm backend
 docker build -t backend .
-docker run -p 8000:8000 --name backend -d backend
+if [[ $1 == "-d" ]]; then
+	docker run -p 8000:8000 --name backend -vd backend
+else
+	docker run -p 8000:8000 --name backend -d backend
+fi

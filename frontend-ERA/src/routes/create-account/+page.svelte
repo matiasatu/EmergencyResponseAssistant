@@ -86,22 +86,24 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ bio }), 
+        body: JSON.stringify({ "username": username, "msg": bio }), 
       });
 
       if (!response.ok) {
-        const error = await response.text();
-        throw new Error(`Request failed: ${error}`);
+        const error = await response.text()
+        throw new Error(`Request failed: ${error}`)
       }
 
-      let data = await response.json();
-      data = JSON.parse(data);
-      bioFeedback = data.feedback
+      let data = await response.json()
+      data = JSON.parse(data)
+      if(data.new_response){
+        bioFeedback = data.response
+      }
       return;
 
     } catch (error) {
       bioFeedback = "No feedback at the moment."
-      console.error('Error fetching Groq feedback:', error);
+      console.error('Error fetching Groq feedback:', error)
     }
   }
 

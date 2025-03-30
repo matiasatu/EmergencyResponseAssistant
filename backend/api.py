@@ -370,7 +370,7 @@ def generate_report(my_location: str = "San Francisco, CA", user_info: str = "")
     summary: a short blurb about what's happening and what to know immidiately. this should only be a few words. Example : "WARNING! WILDFIRES NEARBY. CHECK WEBSITE FOR MORE INFO". Alaways have the check website for mroe info part there
     extended_info: the large amount of information the user should know described in other places in this prompt, formatted as a simple string
     
-    be very strict about this formatting, have nothing else in your response besides this json object. have no new lines in your response. remember to close the bracket.
+    be very strict about this formatting, have nothing else in your response besides this json object. have no new lines in your response except in the . remember to close the bracket.
 
 
     """

@@ -25,7 +25,7 @@
     } catch (error) {
       console.error('Failed to fetch summary:', error);
       hasError = true;
-      errorMessage = error.message || 'Failed to fetch summary';
+      //errorMessage = error.message || 'Failed to fetch summary';
     } finally {
       isLoading = false;
     }
@@ -39,7 +39,7 @@
 </script>
 
 <main class="max-w-3xl mx-auto p-8 font-sans">
-  <h1 class="text-2xl font-bold text-gray-800 mb-8 pb-2 border-b border-gray-200">Summary</h1>
+  <h1 class="text-2xl font-bold text-gray-800 mb-8 pb-2 border-b border-gray-200">Important Information</h1>
   
   {#if isLoading}
     <div class="flex flex-col items-center my-8">

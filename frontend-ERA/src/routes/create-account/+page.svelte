@@ -115,7 +115,7 @@
 
       feedbackInterval = setInterval(() => {
         getGroqFeedback(bio);
-      }, 5000);
+      }, 3000);
     }
   }
 
@@ -148,6 +148,8 @@
           bio
         };
         
+
+
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: {
@@ -165,7 +167,7 @@
         console.log('Profile created:', data);
         
         formSuccess = true;
-        
+        clearInterval(feedbackInterval)
         setTimeout(() => {
           username = '';
           email = '';
